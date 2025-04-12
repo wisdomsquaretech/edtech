@@ -1,0 +1,4 @@
+Title,Assignees,Labels,Status,Priority
+Fix checkout bug,@username,bug,To do,High
+Add Brazilian Portuguese translations,,localization,In progress,Medium
+Optimize homepage loading,@username,performance,Done,Low
