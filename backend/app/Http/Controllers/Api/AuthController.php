@@ -9,16 +9,20 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Sanctum\PersonalAccessToken;
+use Spatie\Permission\Models\Role;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Cache;
 
 class AuthController extends Controller
 {
     // Register a new user
     public function register(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:8|confirmed',
+       $validator = Validator::make($request->all(), [
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'unique:users,email'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'role' => ['required', 'string', Rule::in(Role::pluck('name')->toArray())],            
         ]);
 
         if ($validator->fails()) {
@@ -29,9 +33,23 @@ class AuthController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role' => $request->role
         ]);
 
-        $token = $user->createToken('YourAppName')->plainTextToken;
+        // Check if the role exists and assign it
+        $roleName = $request->role;
+
+        if (!Role::where('name', $roleName)->exists()) {
+            return response()->json(['error' => 'Role does not exist'], 400);
+        }
+
+        // Assign the role after user creation
+        $user->assignRole($roleName);  // This will assign the role properly
+       
+        // Clear the permissions cache
+        Cache::forget('spatie.permission.cache');
+
+        $token = $user->createToken('EdTech')->plainTextToken;
 
         return response()->json([
             'user' => $user,
