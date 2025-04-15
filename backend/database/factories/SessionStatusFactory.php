@@ -1,0 +1,31 @@
+<?php
+
+namespace Database\Factories;
+
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
+use App\Models\Session;
+use App\Models\SessionStatus;
+use App\Models\User;
+
+class SessionStatusFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = SessionStatus::class;
+
+    /**
+     * Define the model's default state.
+     */
+    public function definition(): array
+    {
+        return [
+            'session_id' => Session::factory(),
+            'user_id' => User::factory(),
+            'status' => fake()->randomElement(["completed","incomplete","absent"]),
+        ];
+    }
+}

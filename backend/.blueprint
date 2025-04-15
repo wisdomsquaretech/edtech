@@ -1,0 +1,72 @@
+created:
+    - database/factories/UserFactory.php
+    - database/factories/UserCapabilityFactory.php
+    - database/factories/LanguageFactory.php
+    - database/factories/SchoolFactory.php
+    - database/factories/CurriculumFactory.php
+    - database/factories/LessonFactory.php
+    - database/factories/TutorAvailabilityFactory.php
+    - database/factories/TutorAvailabilitySlotFactory.php
+    - database/factories/SessionFactory.php
+    - database/factories/SessionAttendanceFactory.php
+    - database/factories/SessionStatusFactory.php
+    - database/factories/TutorHoursLookupFactory.php
+    - database/factories/TutorStudentSessionLookupFactory.php
+    - database/factories/BookingFactory.php
+    - database/factories/NotificationFactory.php
+    - database/factories/SessionFeedbackFactory.php
+    - database/migrations/2025_04_11_140135_create_users_table.php
+    - database/migrations/2025_04_11_140136_create_user_capabilities_table.php
+    - database/migrations/2025_04_11_140137_create_languages_table.php
+    - database/migrations/2025_04_11_140138_create_schools_table.php
+    - database/migrations/2025_04_11_140139_create_curricula_table.php
+    - database/migrations/2025_04_11_140140_create_lessons_table.php
+    - database/migrations/2025_04_11_140141_create_tutor_availabilities_table.php
+    - database/migrations/2025_04_11_140142_create_tutor_availability_slots_table.php
+    - database/migrations/2025_04_11_140143_create_sessions_table.php
+    - database/migrations/2025_04_11_140144_create_session_attendances_table.php
+    - database/migrations/2025_04_11_140145_create_session_statuses_table.php
+    - database/migrations/2025_04_11_140146_create_tutor_hours_lookups_table.php
+    - database/migrations/2025_04_11_140147_create_tutor_student_session_lookups_table.php
+    - database/migrations/2025_04_11_140148_create_bookings_table.php
+    - database/migrations/2025_04_11_140149_create_notifications_table.php
+    - database/migrations/2025_04_11_140150_create_session_feedback_table.php
+    - database/migrations/2025_04_11_140151_create_curriculum_user_table.php
+    - database/migrations/2025_04_11_140152_create_school_user_table.php
+    - database/migrations/2025_04_11_140153_create_session_user_table.php
+    - app/Models/User.php
+    - app/Models/UserCapability.php
+    - app/Models/Language.php
+    - app/Models/School.php
+    - app/Models/Curriculum.php
+    - app/Models/Lesson.php
+    - app/Models/TutorAvailability.php
+    - app/Models/TutorAvailabilitySlot.php
+    - app/Models/Session.php
+    - app/Models/SessionAttendance.php
+    - app/Models/SessionStatus.php
+    - app/Models/TutorHoursLookup.php
+    - app/Models/TutorStudentSessionLookup.php
+    - app/Models/Booking.php
+    - app/Models/Notification.php
+    - app/Models/SessionFeedback.php
+models:
+    User: { name: string, email: 'string unique', email_verified_at: 'timestamp nullable', remember_token: 'string nullable', password: string, role: 'enum:admin,tutor,student,coordinator', timezone: 'string nullable', bio: 'text nullable', timestamps: timestamps, relationships: { belongsToMany: 'Curriculum, School, Session', hasMany: 'Language, TutorAvailability, TutorAvailabilitySlot, SessionFeedback, Booking, Notification, SessionAttendance, SessionStatus, TutorHoursLookup, TutorStudentSessionLookup' } }
+    UserCapability: { role: string, capabilities: text, timestamps: timestamps, softdeletes: softDeletes }
+    Language: { user_id: 'id foreign', code: 'string unique', name: string, is_active: boolean, timestamps: timestamps, relationships: { belongsTo: User } }
+    School: { name: string, email: string, address: text, coordinator_id: 'id foreign:users.id', timestamps: timestamps, relationships: { belongsToMany: User } }
+    SchoolUser: { school_id: 'id foreign', user_id: 'id foreign', timestamps: timestamps }
+    Curriculum: { title: string, description: text, creator_id: 'id foreign:users.id', language_code: string, timestamps: timestamps, relationships: { hasMany: Lesson, belongsToMany: User } }
+    CurriculumUser: { curriculum_id: 'id foreign', user_id: 'id foreign', timestamps: timestamps }
+    Lesson: { curriculum_id: 'id foreign', title: string, level: 'enum:beginner,intermediate,advanced', description: text, file_type: 'enum:pdf,video,ppt', file_path: string, language_code: string, timestamps: timestamps, relationships: { belongsTo: Curriculum } }
+    TutorAvailability: { tutor_id: 'id foreign:users.id', day_of_week: 'enum:monday,tuesday,wednesday,thursday,friday,saturday,sunday', start_time: time, end_time: time, timestamps: timestamps, relationships: { belongsTo: 'User:tutor' } }
+    TutorAvailabilitySlot: { tutor_id: 'id foreign:users.id', slot_date: date, start_time: time, end_time: time, capacity: integer, is_booked: 'boolean default:false', is_deleted: 'timestamp nullable', timestamps: timestamps, relationships: { belongsTo: 'User:tutor' } }
+    Session: { school_id: 'id foreign', tutor_id: 'id foreign:users.id', student_id: 'id foreign:users.id', lesson_id: 'id foreign:lessons', start_time: datetime, end_time: datetime, meeting_link: string, notes: 'text nullable', platform: 'enum:zoom,jitsi', checklist_done: 'boolean default:false', status: 'enum:scheduled,postponed,completed,cancelled', timestamps: timestamps, relationships: { belongsToMany: User, belongsTo: 'School:school' } }
+    SessionUser: { session_id: 'id foreign', user_id: 'id foreign', timestamps: timestamps }
+    SessionAttendance: { session_id: 'id foreign', user_id: 'id foreign', joined_at: datetime, left_at: datetime, timestamps: timestamps, relationships: { belongsTo: 'Session, User' } }
+    SessionStatus: { session_id: 'id foreign', user_id: 'id foreign', status: 'enum:completed,incomplete,absent', timestamps: timestamps, relationships: { belongsTo: 'Session, User' } }
+    TutorHoursLookup: { session_id: 'id foreign', tutor_id: 'id foreign:users.id', duration: integer, timestamps: timestamps, relationships: { belongsTo: 'Session:session' } }
+    TutorStudentSessionLookup: { session_id: 'id foreign', user_id: 'id foreign', completed: integer, incomplete: integer, absent: integer, timestamps: timestamps, relationships: { belongsTo: 'Session, User' } }
+    Booking: { student_id: 'id foreign:users.id', slot_id: 'id foreign:tutor_availability_slots.id', session_id: 'id foreign:sessions', status: 'enum:booked,cancelled,completed', creator_id: 'id foreign:users.id', timestamps: timestamps, relationships: { belongsTo: 'User:student' } }
+    Notification: { title: string, message: text, status: 'enum:pending,viewed', creator_id: 'id foreign:users.id', timestamps: timestamps, relationships: { belongsTo: 'User:creator' } }
+    SessionFeedback: { session_id: 'id foreign', user_id: 'id foreign', rating: integer, comments: 'text nullable', submitted_at: datetime, timestamps: timestamps, relationships: { belongsTo: 'Session, User' } }

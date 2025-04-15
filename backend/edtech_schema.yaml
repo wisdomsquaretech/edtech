@@ -1,0 +1,173 @@
+models:
+  User:
+    name: string
+    email: string unique
+    email_verified_at: timestamp nullable
+    remember_token: string nullable
+    password: string
+    role: enum:admin,tutor,student,coordinator
+    timezone: string nullable
+    bio: text nullable
+    timestamps
+    relationships:
+      belongsToMany: Curriculum, School, Session
+      hasMany:
+        Language, TutorAvailability, TutorAvailabilitySlot, SessionFeedback, Booking, Notification, SessionAttendance, SessionStatus, TutorHoursLookup, TutorStudentSessionLookup
+
+  UserCapability:
+    role: string
+    capabilities: text
+    timestamps
+    softDeletes
+
+  Language:
+    user_id: id foreign
+    code: string unique
+    name: string
+    is_active: boolean
+    timestamps
+    relationships:
+      belongsTo: User
+
+  School:
+    name: string
+    email: string
+    address: text
+    coordinator_id: id foreign:users.id
+    timestamps
+    relationships:
+      belongsToMany: User
+
+  Curriculum:
+    title: string
+    description: text
+    creator_id: id foreign:users.id
+    language_code: string
+    timestamps
+    relationships:
+      hasMany: Lesson
+      belongsToMany: User
+ 
+  Lesson:
+    curriculum_id: id foreign
+    title: string
+    level: enum:beginner,intermediate,advanced
+    description: text
+    file_type: enum:pdf,video,ppt
+    file_path: string
+    language_code: string
+    timestamps
+    relationships:
+      belongsTo: Curriculum
+
+  TutorAvailability:
+    tutor_id: id foreign:users.id
+    day_of_week: enum:monday,tuesday,wednesday,thursday,friday,saturday,sunday
+    start_time: time
+    end_time: time
+    timestamps
+    relationships:
+      belongsTo: "User:tutor"
+
+  TutorAvailabilitySlot:
+    tutor_id: id foreign:users.id
+    slot_date: date
+    start_time: time
+    end_time: time
+    capacity: integer
+    is_booked: boolean default:false
+    is_deleted: timestamp nullable
+    timestamps
+    relationships:
+      belongsTo: "User:tutor"
+
+  Session:
+    school_id: id foreign
+    tutor_id: id foreign:users.id
+    student_id: id foreign:users.id
+    lesson_id: id foreign:lessons
+    start_time: datetime
+    end_time: datetime
+    meeting_link: string
+    notes: text nullable
+    platform: enum:zoom,jitsi
+    checklist_done: boolean default:false
+    status: enum:scheduled,postponed,completed,cancelled
+    timestamps
+    relationships:
+      belongsToMany: User
+      belongsTo:
+        - "School:school"
+        - "User:tutor"
+        - "User:student"
+        - "Lesson:lesson"
+
+  SessionAttendance:
+    session_id: id foreign
+    user_id: id foreign
+    joined_at: datetime
+    left_at: datetime
+    timestamps
+    relationships:
+      belongsTo: Session, User
+
+  SessionStatus:
+    session_id: id foreign
+    user_id: id foreign
+    status: enum:completed,incomplete,absent
+    timestamps
+    relationships:
+      belongsTo: Session, User
+
+  TutorHoursLookup:
+    session_id: id foreign
+    tutor_id: id foreign:users.id
+    duration: integer
+    timestamps
+    relationships:
+      belongsTo:
+        - "Session:session"
+        - "User:tutor"
+
+  TutorStudentSessionLookup:
+    session_id: id foreign
+    user_id: id foreign
+    completed: integer
+    incomplete: integer
+    absent: integer
+    timestamps
+    relationships:
+      belongsTo: Session, User
+
+  Booking:
+    student_id: id foreign:users.id
+    slot_id: id foreign:tutor_availability_slots.id
+    session_id: id foreign:sessions
+    status: enum:booked,cancelled,completed
+    creator_id: id foreign:users.id
+    timestamps
+    relationships:
+      belongsTo:
+        - "User:student"
+        - "User:creator"
+        - "Session:session"
+        - "TutorAvailabilitySlot:tutor_availability_slot"
+
+  Notification:
+    title: string
+    message: text
+    status: enum:pending,viewed
+    creator_id: id foreign:users.id
+    timestamps
+    relationships:
+      belongsTo: "User:creator"
+
+  SessionFeedback:
+    session_id: id foreign
+    user_id: id foreign
+    rating: integer
+    comments: text nullable
+    submitted_at: datetime
+    timestamps
+    relationships:
+      belongsTo: Session, User

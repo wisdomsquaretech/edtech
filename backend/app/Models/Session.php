@@ -1,0 +1,73 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+
+class Session extends Model
+{
+    use HasFactory;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'school_id',
+        'tutor_id',
+        'student_id',
+        'lesson_id',
+        'start_time',
+        'end_time',
+        'meeting_link',
+        'notes',
+        'platform',
+        'checklist_done',
+        'status',
+    ];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'id' => 'integer',
+        'school_id' => 'integer',
+        'tutor_id' => 'integer',
+        'student_id' => 'integer',
+        'lesson_id' => 'integer',
+        'start_time' => 'datetime',
+        'end_time' => 'datetime',
+        'checklist_done' => 'boolean',
+    ];
+
+    public function users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class);
+    }
+
+    public function school(): BelongsTo
+    {
+        return $this->belongsTo(School::class);
+    }
+
+    public function tutor(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function student(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function lesson(): BelongsTo
+    {
+        return $this->belongsTo(Lesson::class);
+    }
+}

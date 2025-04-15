@@ -1,0 +1,36 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::disableForeignKeyConstraints();
+
+        Schema::create('tutor_student_session_lookups', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('session_id')->constrained();
+            $table->foreignId('user_id')->constrained();
+            $table->integer('completed');
+            $table->integer('incomplete');
+            $table->integer('absent');
+            $table->timestamps();
+        });
+
+        Schema::enableForeignKeyConstraints();
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('tutor_student_session_lookups');
+    }
+};
