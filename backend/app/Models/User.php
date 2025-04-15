@@ -23,12 +23,13 @@ class User extends Authenticatable
         'name',
         'email',
         'email_verified_at',
-        'password',
+        'password',       
         'role',
         'timezone',
         'bio',
     ];
 
+    protected $guard_name = 'web';
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -42,11 +43,11 @@ class User extends Authenticatable
     /**
      * The attributes that should be cast to native types.
      *
-     * @var array
+     * @return array<string, string>
      */
-    protected $casts = [
-        'id' => 'integer',
+    protected $casts = [       
         'email_verified_at' => 'timestamp',
+        'password' => 'hashed',
     ];
 
     public function curricula(): BelongsToMany
