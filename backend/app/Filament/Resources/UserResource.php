@@ -12,6 +12,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Spatie\Permission\Models\Role;
 
 class UserResource extends Resource
 {
@@ -38,10 +39,14 @@ class UserResource extends Resource
                 // Forms\Components\TextInput::make('role')
                 //     ->required(),
                 Forms\Components\Select::make('roles')
-                    ->relationship('roles', 'name')
-                    ->multiple()
+                    ->label('Role')
+                    ->relationship('roles', 'name') // This pulls from Spatie's roles
                     ->preload()
-                    ->searchable(),
+                    ->searchable()
+                    ->required()
+                    ->default(function (?User $record) {
+                        return $record?->roles->first()?->id;
+                    }),
                 Forms\Components\TextInput::make('timezone')
                     ->maxLength(255),
                 Forms\Components\Textarea::make('bio')
@@ -60,7 +65,11 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('email_verified_at')
                     ->dateTime()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('role'),
+                //Tables\Columns\TextColumn::make('role'),
+                Tables\Columns\TextColumn::make('roles.name')
+                    ->label('Role')
+                    ->sortable()
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('timezone')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
@@ -104,6 +113,6 @@ class UserResource extends Resource
     }
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->where('role', '!=','admin');
+        return parent::getEloquentQuery();
     }
 }
