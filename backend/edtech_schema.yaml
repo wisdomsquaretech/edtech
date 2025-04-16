@@ -5,7 +5,7 @@ models:
     email_verified_at: timestamp nullable
     remember_token: string nullable
     password: string
-    role: enum:admin,tutor,student,coordinator
+    role: enum:admin,tutor,student,coordinator default:student
     timezone: string nullable
     bio: text nullable
     timestamps
