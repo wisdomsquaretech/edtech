@@ -1,7 +1,11 @@
 "use client";
 import React, { useState } from "react";
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  user: any; // 🔁 Replace 'any' with actual user type if known
+}
+
+const Header: React.FC<HeaderProps> = ({ user }) =>  {
   const [language, setLanguage] = useState("EN");
   const userImage = "https://readdy.ai/api/search-image?query=professional%20portrait%20of%20a%20teenage%20student%20with%20a%20friendly%20smile%2C%20diverse%20background%2C%20high%20quality%20professional%20headshot%20on%20simple%20light%20blue%20background%2C%20looking%20at%20camera&width=100&height=100&seq=profile1&orientation=squarish";
 

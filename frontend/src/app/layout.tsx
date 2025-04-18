@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Nav from "@/components/NavSection";
+
 import LanguageBannerSection from "@/components/LanguageBannerSection";
+
+
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,7 +30,8 @@ export default function RootLayout({
 
         {/* Navigation */}
         <Nav />
-
+      
+        
         {children}
       </body>
     </html>

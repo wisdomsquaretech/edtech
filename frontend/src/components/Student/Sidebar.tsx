@@ -1,4 +1,5 @@
 "use client";
+import LogoutButton from "@/utils/logout";
 import React, { useState } from "react";
 
 const Sidebar: React.FC = () => {
@@ -50,7 +51,7 @@ const Sidebar: React.FC = () => {
           <div className={`flex items-center p-3 text-gray-600 hover:bg-gray-50 cursor-pointer ${isOpen ? '' : 'justify-center'}`}>
             <i className="fas fa-sign-out-alt"></i>
             <span className={`ml-3 ${isOpen ? 'opacity-100' : 'opacity-0 hidden'}`}>
-              Logout
+              <LogoutButton/>
             </span>
           </div>
         </div>

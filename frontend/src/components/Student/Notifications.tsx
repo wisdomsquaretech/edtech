@@ -14,14 +14,14 @@ const Notifications = () => {
         <span className="bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded-full">{notifications.length}</span>
       </div>
       <div className="p-6 space-y-4">
-        {notifications.map((n) => (
-          <div key={n.id} className="flex items-start space-x-3 p-3 hover:bg-gray-50 rounded-lg">
-            <div className={`p-2 rounded-full ${n.type === "reminder" ? "bg-blue-100 text-blue-600" : n.type === "announcement" ? "bg-purple-100 text-purple-600" : "bg-green-100 text-green-600"}`}>
-              <i className={`fas ${n.type === "reminder" ? "fa-bell" : n.type === "announcement" ? "fa-bullhorn" : "fa-trophy"}`}></i>
+        {notifications.map((section, index) => (
+          <div key={section.id} className="flex items-start space-x-3 p-3 hover:bg-gray-50 rounded-lg">
+            <div className={`p-2 rounded-full ${section.type === "reminder" ? "bg-blue-100 text-blue-600" : section.type === "announcement" ? "bg-purple-100 text-purple-600" : "bg-green-100 text-green-600"}`}>
+              <i className={`fas ${section.type === "reminder" ? "fa-bell" : section.type === "announcement" ? "fa-bullhorn" : "fa-trophy"}`}></i>
             </div>
             <div className="flex-1">
-              <p className="text-gray-900">{n.message}</p>
-              <p className="text-xs text-gray-500">{n.time}</p>
+              <p className="text-gray-900">{section.message}</p>
+              <p className="text-xs text-gray-500">{section.time}</p>
             </div>
           </div>
         ))}

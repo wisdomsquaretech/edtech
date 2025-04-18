@@ -1,3 +1,4 @@
+import { useRouter } from 'next/navigation';
 //'use client'; // optional if using interactivity
 
 import Link from 'next/link';
@@ -10,7 +11,7 @@ const Nav = () => {
         <Link href="/">
         <div className="text-2xl font-bold text-blue-700">
           <i className="fas fa-globe-americas mr-2"></i>
-          EduConnect
+          United Lingua
         </div>
         </Link>
 
@@ -24,7 +25,9 @@ const Nav = () => {
         
         <div className="flex items-center space-x-4">
           <button className="text-blue-700 hover:text-blue-900 cursor-pointer">
-            <i className="fas fa-sign-in-alt mr-1"></i> Login
+          <Link href="/registration?mode=login" className="text-blue-700 hover:text-blue-900 cursor-pointer">
+                <i className="fas fa-sign-in-alt mr-1"></i> Login
+          </Link>
           </button>
           <button className="bg-blue-700 text-white px-4 py-2 rounded-button hover:bg-blue-800 transition duration-300 whitespace-nowrap cursor-pointer">
             Get Started

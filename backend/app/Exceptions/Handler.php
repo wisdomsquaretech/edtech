@@ -6,7 +6,8 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 use Illuminate\Auth\Access\AuthorizationException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
-
+use Spatie\Permission\Exceptions\UnauthorizedException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 class Handler extends ExceptionHandler
 {
     /**
@@ -42,8 +43,8 @@ class Handler extends ExceptionHandler
 
 
             // Catch Rupadana / Sanctum Unauthorized Exception
-            if ($exception instanceof UnauthorizedHttpException) {
-                
+            if ($exception instanceof UnauthorizedHttpException || $exception instanceof UnauthorizedException ||
+                $exception instanceof MethodNotAllowedHttpException ) {
                 // Try to extract resource from the route or URL
                 $route = $request->route();
                 $path = $request->path(); // like "api/languages", "api/posts"

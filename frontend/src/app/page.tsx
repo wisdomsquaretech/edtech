@@ -3,7 +3,7 @@ import ContactSection from "@/components/Landing-page/ContactSection";
 import Footer from "@/components/FooterSection";
 import Hero from "@/components/Landing-page/HeroSection";
 import HowItWork from "@/components/Landing-page/HowItWorkSection";
-import Nav from "@/components/NavSection";
+// import Nav from "@/components/NavSection";
 import Registration from "@/components/Landing-page/RegistrationSection";
 import Image from "next/image";
 import LanguageBannerSection from "@/components/LanguageBannerSection";
@@ -19,7 +19,7 @@ export default function Home() {
       <LanguageBannerSection/>
 
       {/* Navigation */}
-      <Nav/>
+      {/* <Nav/> */}
 
       {/* Hero Section */}
       <Hero/>

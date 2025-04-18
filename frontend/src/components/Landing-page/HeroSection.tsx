@@ -1,8 +1,15 @@
 
 import React from "react";
 import Image from "next/image";
+import { useRouter } from 'next/navigation';
 
 const Hero = () =>{
+
+      const router = useRouter();
+      const handleRegisterClick = (type: "student" | "tutor") => {
+          router.push(`/registration?type=${type}`);
+        };
+
     return(
         <div className="relative overflow-hidden">
         <div className="absolute inset-0 z-0">
@@ -22,10 +29,10 @@ const Hero = () =>{
             Connect high school tutors in the U.S. with underprivileged students in South Korea and Mexico for meaningful 1-on-1 English tutoring experiences.
           </p>
           <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6">
-            <button className="px-8 py-4 bg-white text-blue-700 font-bold rounded-button hover:bg-blue-50 transition duration-300 whitespace-nowrap cursor-pointer">
+            <button onClick={()=>handleRegisterClick("tutor")} className="px-8 py-4 bg-white text-blue-700 font-bold rounded-button hover:bg-blue-50 transition duration-300 whitespace-nowrap cursor-pointer">
               Become a Tutor
             </button>
-            <button className="px-8 py-4 bg-blue-600 text-white font-bold rounded-button border border-white hover:bg-blue-700 transition duration-300 whitespace-nowrap cursor-pointer">
+            <button onClick={()=>handleRegisterClick("student")}className="px-8 py-4 bg-blue-600 text-white font-bold rounded-button border border-white hover:bg-blue-700 transition duration-300 whitespace-nowrap cursor-pointer">
               Join as Student
             </button>
           </div>

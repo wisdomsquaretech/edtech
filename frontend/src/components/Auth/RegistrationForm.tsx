@@ -1,47 +1,89 @@
 "use client";
-import React, { useState,  useEffect  } from "react";
-import { useSearchParams } from "next/navigation";
+import React, { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { FormFields } from "./FormFields";
+import { validateRegisterForm } from "@/utils/validation";
+import { useAuth } from "@/hooks/useAuth";
 
-const RegistrationForm: React.FC = () => {
+
+// type Props = {
+//   authType: string;
+// };
+
+const RegistrationForm = () => {
+  const [userType, setUserType] = useState("student");
+  const [isLoginMode, setIsLoginMode] = useState(false);
+  const [formData, setFormData] = useState({ fullName: "", email: "", password: "", confirmPassword: "", phone: "", subject: "", experience: "", qualification: "" });
+  const [errors, setErrors] = useState({});
   const searchParams = useSearchParams();
-  const [userType, setUserType] = useState<"student" | "tutor">("student");
+  const router = useRouter();
+  const { login, register } = useAuth();
 
   useEffect(() => {
     const typeParam = searchParams.get("type");
-    if (typeParam === "student" || typeParam === "tutor") {
-      setUserType(typeParam);
-    }
+    const modeParam = searchParams.get("mode");
+    if (typeParam) setUserType(typeParam);
+    if (modeParam === "login") setIsLoginMode(true);
   }, [searchParams]);
-  
-  
-  const [formData, setFormData] = useState({
-    fullName: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    phone: "",
-    subject: "",
-    experience: "",
-    qualification: "",
-  });
+
+  // const RegistrationForm = ({ authType }: { authType: string }) => {
+  //   const [userType, setUserType] = useState("student");
+  //   const [isLoginMode, setIsLoginMode] = useState(authType === "login");
+  // }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Registering:", { userType, ...formData });
+    setErrors({});
+    try {
+      if (isLoginMode) {
+        const data = await login(formData, userType);
+
+         // Save token and user data
+        localStorage.setItem("auth_token", data.token);
+        localStorage.setItem("auth_user", JSON.stringify(data.user));
+
+        // ✅ Set cookie for role-based middleware (expires in 1 day)
+        document.cookie = `role=${data.user.role}; path=/; max-age=86400;`;
+        //document.cookie = `name=${encodeURIComponent(data.user.name)}; path=/; max-age=86400;`;
+
+        //router.push(data.user.role === "tutor" ? "/tutor" : "/student");
+        if (data.user.role === "tutor") {
+          window.location.href = "/tutor";
+        } else {
+          window.location.href = "/student";
+        }
+      } else {
+        const validationErrors = validateRegisterForm(formData);
+        
+        if (Object.keys(validationErrors).length > 0) {
+          setErrors(validationErrors);
+          return;
+        }
+        
+        const payload = { ...formData, name: formData.fullName, password_confirmation: formData.confirmPassword, role: userType };
+        const data = await register(payload);
+        localStorage.setItem("auth_token", data.token);
+        alert("Registration successful!");
+
+        // ✅ Set role cookie after registration
+        //document.cookie = `role=${data.user.role}; path=/; max-age=86400;`;
+      }
+    } catch (error: any) {
+      alert("Error: " + error.message);
+    }
   };
 
   return (
-    <div className="w-full max-w-md">
-      <div className="text-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-800 mb-2">Create an Account</h1>
-        <p className="text-gray-600 text-sm">Register as a Student or Tutor</p>
-      </div>
-
-      {/* Toggle Buttons */}
+    <div className="form-container">
+      <h2>{isLoginMode ? "Login" : "Register"}</h2>
+      <button onClick={() => setIsLoginMode(!isLoginMode)} className="text-blue-600 text-sm mb-4">
+        {isLoginMode ? "Don't have an account?" : "Already have an account?"}
+      </button>
+      {!isLoginMode && (
       <div className="flex justify-center mb-6">
         <div className="bg-gray-200 rounded-full p-1 flex w-full max-w-xs">
           <button
@@ -64,99 +106,21 @@ const RegistrationForm: React.FC = () => {
           </button>
         </div>
       </div>
-
-      {/* Registration Form */}
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          name="fullName"
-          placeholder="Full Name"
-          value={formData.fullName}
-          onChange={handleChange}
-          required
-          className="w-full px-3 py-2 border rounded text-sm"
+      )}
+      {/* {!isLoginMode && (
+      <ToggleButtons userType={userType} onChange={setUserType} />
+      )} */}
+      <form onSubmit={handleSubmit}>
+        <FormFields
+          formData={formData}
+          errors={errors}
+          isLoginMode={isLoginMode}
+          userType={userType}
+          handleChange={handleChange}
         />
-        <input
-          name="email"
-          placeholder="Email"
-          type="email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-          className="w-full px-3 py-2 border rounded text-sm"
-        />
-        <input
-          name="phone"
-          placeholder="Phone"
-          type="tel"
-          value={formData.phone}
-          onChange={handleChange}
-          required
-          className="w-full px-3 py-2 border rounded text-sm"
-        />
-        <input
-          name="password"
-          placeholder="Password"
-          type="password"
-          value={formData.password}
-          onChange={handleChange}
-          required
-          className="w-full px-3 py-2 border rounded text-sm"
-        />
-        <input
-          name="confirmPassword"
-          placeholder="Confirm Password"
-          type="password"
-          value={formData.confirmPassword}
-          onChange={handleChange}
-          required
-          className="w-full px-3 py-2 border rounded text-sm"
-        />
-
-        {userType === "tutor" && (
-          <>
-            <select
-              name="subject"
-              value={formData.subject}
-              onChange={handleChange}
-              required
-              className="w-full px-3 py-2 border rounded text-sm"
-            >
-              <option value="">Select Subject Expertise</option>
-              <option value="Math">Math</option>
-              <option value="Science">Science</option>
-              <option value="English">English</option>
-              <option value="Computer Science">Computer Science</option>
-            </select>
-            <input
-              name="experience"
-              placeholder="Years of Experience"
-              type="number"
-              value={formData.experience}
-              onChange={handleChange}
-              required
-              className="w-full px-3 py-2 border rounded text-sm"
-            />
-            <input
-              name="qualification"
-              placeholder="Qualification"
-              value={formData.qualification}
-              onChange={handleChange}
-              required
-              className="w-full px-3 py-2 border rounded text-sm"
-            />
-          </>
-        )}
-
-        <button
-          type="submit"
-          className="w-full py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition text-sm"
-        >
-          Register as {userType === "student" ? "Student" : "Tutor"}
+        <button type="submit" className="btn-primary">
+          {isLoginMode ? `Login ` : `Register as ${userType}`}
         </button>
-
-        <p className="text-center text-sm text-gray-500 mt-2">
-          Already have an account? <a href="/login" className="text-blue-600 hover:underline">Login</a>
-        </p>
       </form>
     </div>
   );

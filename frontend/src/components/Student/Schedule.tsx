@@ -15,7 +15,9 @@ const Schedule = () => {
       <div className="p-6">
         <div className="bg-gray-50 rounded-lg p-4 mb-6">
           <div className="grid grid-cols-7 gap-1 text-center mb-2 text-sm font-medium text-gray-500">
-            {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((d) => <div key={d}>{d}</div>)}
+          {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((d, i) => (
+              <div key={`${d}-${i}`}>{d}</div>
+          ))}
           </div>
           <div className="grid grid-cols-7 gap-1 text-center">
             {Array.from({ length: 30 }, (_, i) => {

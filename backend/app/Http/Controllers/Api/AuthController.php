@@ -18,11 +18,11 @@ class AuthController extends Controller
     // Register a new user
     public function register(Request $request)
     {
-       $validator = Validator::make($request->all(), [
+        $validator = Validator::make($request->all(), [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'unique:users,email'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'role' => ['required', 'string', Rule::in(Role::pluck('name')->toArray())],            
+            'role' => ['required', 'string', Rule::in(Role::pluck('name')->toArray())],
         ]);
 
         if ($validator->fails()) {
@@ -45,15 +45,12 @@ class AuthController extends Controller
 
         // Assign the role after user creation
         $user->assignRole($roleName);  // This will assign the role properly
-       
+
         // Clear the permissions cache
         Cache::forget('spatie.permission.cache');
 
-        $token = $user->createToken('EdTech')->plainTextToken;
-
         return response()->json([
             'user' => $user,
-            'token' => $token,
         ]);
     }
 
@@ -64,7 +61,7 @@ class AuthController extends Controller
 
         if (auth()->attempt($credentials)) {
             $user = auth()->user();
-            $token = $user->createToken('YourAppName')->plainTextToken;
+            $token = $user->createToken('EdTech')->plainTextToken;
 
             return response()->json([
                 'user' => $user,
