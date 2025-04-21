@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Role;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 use App\Models\User;
@@ -26,9 +27,22 @@ class UserFactory extends Factory
             'email_verified_at' => fake()->dateTime(),
             'remember_token' => fake()->uuid(),
             'password' => fake()->password(),
-            'role' => fake()->randomElement(["admin","tutor","student","coordinator"]),
+            'role' => fake()->randomElement(["tutor", "student", "coordinator"]),
             'timezone' => fake()->word(),
             'bio' => fake()->text(),
         ];
+    }
+
+    public function configure(): static
+    {
+        return $this->afterCreating(function (User $user) {
+            $role = $user->role;
+
+            // Ensure the role exists before assigning
+            Role::firstOrCreate(['name' => $role]);
+
+            // Assign the role using Spatie
+            $user->assignRole($role);
+        });
     }
 }

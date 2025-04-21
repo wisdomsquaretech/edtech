@@ -20,6 +20,9 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        $this->call([
+            RoleSeeder::class
+        ]);
         // Create 5 coordinators
         $coordinators = User::factory()
             ->count(5)
