@@ -6,6 +6,7 @@ use App\Filament\Resources\NotificationResource\Pages;
 use App\Filament\Resources\NotificationResource\RelationManagers;
 use App\Models\Notification;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -29,8 +30,12 @@ class NotificationResource extends Resource
                 Forms\Components\Textarea::make('message')
                     ->required()
                     ->columnSpanFull(),
-                Forms\Components\TextInput::make('status')
-                    ->required(),
+                Select::make('status')
+                    ->label('Status')
+                    ->options([
+                        'pending' => 'Pending',
+                        'viewed' => 'Viewed'
+                    ]),
                 Forms\Components\Select::make('creator_id')
                     ->relationship('creator', 'name')
                     ->required(),
@@ -60,7 +65,7 @@ class NotificationResource extends Resource
                 //
             ])
             ->actions([
-                  Tables\Actions\ViewAction::make(),
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])

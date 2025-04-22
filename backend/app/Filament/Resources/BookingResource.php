@@ -6,6 +6,7 @@ use App\Filament\Resources\BookingResource\Pages;
 use App\Filament\Resources\BookingResource\RelationManagers;
 use App\Models\Booking;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -32,8 +33,13 @@ class BookingResource extends Resource
                 Forms\Components\Select::make('session_id')
                     ->relationship('session', 'id')
                     ->required(),
-                Forms\Components\TextInput::make('status')
-                    ->required(),
+                Select::make('status')
+                    ->label('Status')
+                    ->options([
+                        'booked' => 'Booked',
+                        'cancelled' => 'Cancelled',
+                        'completed' => 'Completed'
+                    ]),
                 Forms\Components\Select::make('creator_id')
                     ->relationship('creator', 'name')
                     ->required(),

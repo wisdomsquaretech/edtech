@@ -6,6 +6,7 @@ use App\Filament\Resources\SessionResource\Pages;
 use App\Filament\Resources\SessionResource\RelationManagers;
 use App\Models\Session;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -16,7 +17,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class SessionResource extends Resource
 {
     protected static ?string $model = Session::class;
- 
+
     public static function getNavigationGroup(): ?string
     {
         return 'Sessions';
@@ -57,11 +58,23 @@ class SessionResource extends Resource
                     ->maxLength(255),
                 Forms\Components\Textarea::make('notes')
                     ->columnSpanFull(),
-                Forms\Components\TextInput::make('platform')
+                Select::make('platform')
+                    ->label('Platform')
+                    ->options([
+                        'zoom' => 'zoom',
+                        'jitsi' => 'jitsi'
+                    ])
                     ->required(),
                 Forms\Components\Toggle::make('checklist_done')
                     ->required(),
-                Forms\Components\TextInput::make('status')
+                Select::make('status')
+                    ->label('Status')
+                    ->options([
+                        'scheduled' => 'Scheduled',
+                        'postponed' => 'Postponed',
+                        'completed' => 'Completed',
+                        'cancelled' => 'Cancelled',
+                    ])
                     ->required(),
             ]);
     }
@@ -70,18 +83,22 @@ class SessionResource extends Resource
     {
         return $table
             ->columns([
-                // Tables\Columns\TextColumn::make('school.name')
-                //     ->numeric()
-                //     ->sortable(),
-                // Tables\Columns\TextColumn::make('tutor.name')
-                //     ->numeric()
-                //     ->sortable(),
-                // Tables\Columns\TextColumn::make('student.name')
-                //     ->numeric()
-                //     ->sortable(),
-                // Tables\Columns\TextColumn::make('lesson.title')
-                //     ->numeric()
-                //     ->sortable(),
+                Tables\Columns\TextColumn::make('school.name')
+                    ->searchable()
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('tutor.name')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('student.name')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('curriculum.title')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('lesson.title')
+                    ->numeric()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('start_time')
                     ->dateTime()
                     ->sortable(),

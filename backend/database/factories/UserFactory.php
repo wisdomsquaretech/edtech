@@ -27,7 +27,6 @@ class UserFactory extends Factory
             'email_verified_at' => fake()->dateTime(),
             'remember_token' => fake()->uuid(),
             'password' => fake()->password(),
-            'role' => fake()->randomElement(["tutor", "student", "coordinator"]),
             'timezone' => fake()->word(),
             'bio' => fake()->text(),
         ];
@@ -36,12 +35,12 @@ class UserFactory extends Factory
     public function configure(): static
     {
         return $this->afterCreating(function (User $user) {
-            $role = $user->role;
+            $roles = ['tutor', 'student', 'coordinator'];
+            $role = fake()->randomElement($roles);
 
-            // Ensure the role exists before assigning
             Role::firstOrCreate(['name' => $role]);
 
-            // Assign the role using Spatie
+            // Assign the role
             $user->assignRole($role);
         });
     }

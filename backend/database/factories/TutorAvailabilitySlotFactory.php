@@ -26,7 +26,7 @@ class TutorAvailabilitySlotFactory extends Factory
             'slot_date' => fake()->date(),
             'start_time' => fake()->time(),
             'end_time' => fake()->time(),
-            'capacity' => fake()->numberBetween(-10000, 10000),
+            'capacity' => fake()->numberBetween(1, 10000),
             'is_booked' => fake()->boolean(),
             'is_deleted' => fake()->dateTime(),
         ];

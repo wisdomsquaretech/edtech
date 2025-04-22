@@ -6,6 +6,8 @@ use App\Filament\Resources\TutorAvailabilityResource\Pages;
 use App\Filament\Resources\TutorAvailabilityResource\RelationManagers;
 use App\Models\TutorAvailability;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -16,7 +18,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class TutorAvailabilityResource extends Resource
 {
     protected static ?string $model = TutorAvailability::class;
- 
+
     public static function getNavigationGroup(): ?string
     {
         return 'Tutors';
@@ -39,11 +41,23 @@ class TutorAvailabilityResource extends Resource
                 Forms\Components\Select::make('tutor_id')
                     ->relationship('tutor', 'name')
                     ->required(),
-                Forms\Components\TextInput::make('day_of_week')
+                Select::make('day_of_week')
+                    ->label('Day of week')
+                    ->options([
+                        'monday' => 'Monday',
+                        'tuesday' => 'Tuesday',
+                        'wednesday' => 'Wednesday',
+                        'thursday' => 'Thursday',
+                        'friday' => 'Friday',
+                        'saturday' => 'Saturday',
+                        'sunday' => 'Sunday',
+                    ])
                     ->required(),
-                Forms\Components\TextInput::make('start_time')
+                //Forms\Components\TextInput::make('start_time')
+                //Forms\Components\TextInput::make('end_time')
+                TimePicker::make('start_time')
                     ->required(),
-                Forms\Components\TextInput::make('end_time')
+                TimePicker::make('end_time')
                     ->required(),
             ]);
     }
@@ -53,6 +67,7 @@ class TutorAvailabilityResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('tutor.name')
+                    ->searchable()
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('day_of_week'),

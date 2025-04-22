@@ -6,6 +6,7 @@ use App\Filament\Resources\SessionStatusResource\Pages;
 use App\Filament\Resources\SessionStatusResource\RelationManagers;
 use App\Models\SessionStatus;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -40,8 +41,13 @@ class SessionStatusResource extends Resource
                 Forms\Components\Select::make('user_id')
                     ->relationship('user', 'name')
                     ->required(),
-                Forms\Components\TextInput::make('status')
-                    ->required(),
+                Select::make('status')
+                    ->label('Status')
+                    ->options([
+                        'completed' => 'Completed',
+                        'incomplete' => 'Incomplete',
+                        'absent' => 'Absent'
+                    ]),
             ]);
     }
 

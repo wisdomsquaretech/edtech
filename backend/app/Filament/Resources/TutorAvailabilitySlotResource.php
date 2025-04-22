@@ -6,6 +6,7 @@ use App\Filament\Resources\TutorAvailabilitySlotResource\Pages;
 use App\Filament\Resources\TutorAvailabilitySlotResource\RelationManagers;
 use App\Models\TutorAvailabilitySlot;
 use Filament\Forms;
+use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -40,9 +41,9 @@ class TutorAvailabilitySlotResource extends Resource
                     ->required(),
                 Forms\Components\DatePicker::make('slot_date')
                     ->required(),
-                Forms\Components\TextInput::make('start_time')
+                TimePicker::make('start_time')
                     ->required(),
-                Forms\Components\TextInput::make('end_time')
+                TimePicker::make('end_time')
                     ->required(),
                 Forms\Components\TextInput::make('capacity')
                     ->required()
@@ -58,6 +59,7 @@ class TutorAvailabilitySlotResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('tutor.name')
+                    ->searchable()
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('slot_date')

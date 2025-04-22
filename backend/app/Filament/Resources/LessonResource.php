@@ -6,6 +6,7 @@ use App\Filament\Resources\LessonResource\Pages;
 use App\Filament\Resources\LessonResource\RelationManagers;
 use App\Models\Lesson;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -29,12 +30,23 @@ class LessonResource extends Resource
                 Forms\Components\TextInput::make('title')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('level')
-                    ->required(),
+                Select::make('level')
+                    ->label('Level')
+                    ->options([
+                        'beginner' => 'Beginner',
+                        'intermediate' => 'Intermediate',
+                        'advanced' => 'Advanced',
+                    ]),
                 Forms\Components\Textarea::make('description')
                     ->required()
                     ->columnSpanFull(),
-                Forms\Components\TextInput::make('file_type')
+                Select::make('file_type')
+                    ->label('File type')
+                    ->options([
+                        'pdf' => 'Pdf',
+                        'video' => 'Video',
+                        'ppt' => 'Ppt',
+                    ])
                     ->required(),
                 Forms\Components\TextInput::make('file_path')
                     ->required()
