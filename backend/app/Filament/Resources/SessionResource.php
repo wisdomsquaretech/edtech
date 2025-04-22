@@ -93,12 +93,13 @@ class SessionResource extends Resource
                 Tables\Columns\TextColumn::make('student.name')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('curriculum.title')
-                    ->numeric()
-                    ->sortable(),
+                // Tables\Columns\TextColumn::make('curriculum.title')
+                //     ->numeric()
+                //     ->sortable(),
                 Tables\Columns\TextColumn::make('lesson.title')
                     ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('start_time')
                     ->dateTime()
                     ->sortable(),

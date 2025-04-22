@@ -49,4 +49,13 @@ class Curriculum extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function delete()
+    {
+        // Delete all lessons
+        $this->lessons->each->delete();
+
+        // Then soft delete the curriculum
+        parent::delete();
+    }
 }

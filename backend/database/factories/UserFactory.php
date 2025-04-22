@@ -44,4 +44,25 @@ class UserFactory extends Factory
             $user->assignRole($role);
         });
     }
+
+    public function coordinator(): static
+    {
+        return $this->afterCreating(function (User $user) {
+            $user->assignRole('coordinator');
+        });
+    }
+
+    public function tutor(): static
+    {
+        return $this->afterCreating(function (User $user) {
+            $user->assignRole('tutor');
+        });
+    }
+
+    public function student(): static
+    {
+        return $this->afterCreating(function (User $user) {
+            $user->assignRole('student');
+        });
+    }
 }

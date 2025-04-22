@@ -33,10 +33,10 @@ class AdminPanelProvider extends PanelProvider
             ->login()
             ->brandName('EdTech')
             //->brandLogo(asset('images/logo.svg'))
-           // ->topNavigation()
+            // ->topNavigation()
             ->colors([
                 'primary' => Color::Amber,
-            ])            
+            ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
@@ -46,66 +46,6 @@ class AdminPanelProvider extends PanelProvider
             ->widgets([
                 Widgets\AccountWidget::class,
                 Widgets\FilamentInfoWidget::class,
-            ])
-            ->navigationGroups([
-                NavigationGroup::make()
-                    ->label('Sessions'),
-                    //->collapsed(),
-            ])
-            ->navigationItems([
-                NavigationItem::make()
-                    ->label('All Sessions')
-                    ->icon('heroicon-o-calendar')
-                    ->url('/admin/session')
-                    ->group('Sessions'),
-
-                NavigationItem::make()
-                    ->label('Attendances')
-                    ->icon('heroicon-o-check-circle')
-                    ->url('/admin/session/attendance')
-                    ->group('Sessions'),
-
-                NavigationItem::make()
-                    ->label('Feedbacks')
-                    ->icon('heroicon-o-chat-bubble-left-ellipsis')
-                    ->url('/admin/session/feedback')
-                    ->group('Sessions'),
-
-                NavigationItem::make()
-                    ->label('Status')
-                    ->icon('heroicon-o-chart-bar')
-                    ->url('/admin/session/status')
-                    ->group('Sessions'),
-            ])
-            ->navigationGroups([
-                NavigationGroup::make()
-                    ->label('Tutors')
-                    ->collapsed()
-            ])
-            ->navigationItems([
-                NavigationItem::make()
-                    ->label('Tutor Availability')
-                    ->icon('heroicon-o-clock')
-                    ->url('/admin/tutor-availability')
-                    ->group('Tutors'),
-
-                NavigationItem::make()
-                    ->label('Tutor Availability Slot')
-                    ->icon('heroicon-o-calendar')
-                    ->url('/admin/tutor-availability-slot')
-                    ->group('Tutors'),
- 
-                NavigationItem::make()
-                    ->label('Tutor Hours Lookup')
-                    ->icon('heroicon-o-magnifying-glass')
-                    ->url('/admin/tutor-hours-lookup')
-                    ->group('Tutors'),
-
-                NavigationItem::make()
-                    ->label('Tutor Student Session Lookup')
-                    ->icon('heroicon-o-users')
-                    ->url('/admin/tutor-student-session-lookup')
-                    ->group('Tutors'),
             ])
             ->sidebarFullyCollapsibleOnDesktop()
             ->sidebarCollapsibleOnDesktop()

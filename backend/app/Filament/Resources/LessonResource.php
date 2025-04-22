@@ -63,7 +63,8 @@ class LessonResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('curriculum.title')
                     ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('title')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('level'),

@@ -21,8 +21,7 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'unique:users,email'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'role' => ['required', 'string', Rule::in(Role::pluck('name')->toArray())],
+            'password' => ['required', 'string', 'min:8', 'confirmed']
         ]);
 
         if ($validator->fails()) {
@@ -32,8 +31,7 @@ class AuthController extends Controller
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role' => $request->role
+            'password' => Hash::make($request->password)
         ]);
 
         // Check if the role exists and assign it

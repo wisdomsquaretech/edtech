@@ -25,7 +25,7 @@ class TutorHoursLookupFactory extends Factory
         return [
             'session_id' => Session::factory(),
             'tutor_id' => User::factory(),
-            'duration' => fake()->numberBetween(-10000, 10000),
+            'duration' => fake()->numberBetween(1, 100),
         ];
     }
 }

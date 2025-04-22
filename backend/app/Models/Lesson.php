@@ -46,4 +46,12 @@ class Lesson extends Model
     {
         return $this->hasMany(Session::class);
     }
+
+    public function delete()
+    {
+        // Delete all sessions tied to the lesson
+        $this->sessions->each->delete();
+
+        parent::delete();
+    }
 }

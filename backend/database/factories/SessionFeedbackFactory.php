@@ -25,7 +25,7 @@ class SessionFeedbackFactory extends Factory
         return [
             'session_id' => Session::factory(),
             'user_id' => User::factory(),
-            'rating' => fake()->numberBetween(-10000, 10000),
+            'rating' => fake()->numberBetween(1, 10),
             'comments' => fake()->text(),
             'submitted_at' => fake()->dateTime(),
         ];

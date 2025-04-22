@@ -64,7 +64,12 @@ class CurriculumResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\DeleteAction::make()
+                    ->requiresConfirmation()
+                    ->modalHeading('Delete Record')
+                    ->modalDescription('Do you want to delete all associated data when you remove a curriculum?')
+                    ->modalSubmitActionLabel('Yes, delete')
+                    ->action(fn(Curriculum $record) => $record->delete())
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

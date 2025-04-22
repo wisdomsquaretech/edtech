@@ -102,4 +102,16 @@ class Session extends Model
     {
         return $this->hasMany(SessionFeedback::class);
     }
+
+    public function delete()
+    {
+        $this->sessionAttendances->each->delete();
+        $this->sessionStatuses->each->delete();
+        $this->tutorHoursLookups->each->delete();
+        $this->tutorStudentSessionLookups->each->delete();
+        $this->bookings->each->delete();
+        $this->sessionFeedbacks->each->delete();
+
+        parent::delete();
+    }
 }

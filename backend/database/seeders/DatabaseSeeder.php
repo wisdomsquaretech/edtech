@@ -24,12 +24,9 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class
         ]);
         // Create 5 coordinators
-        $coordinators = User::factory()
-            ->count(5)
-            ->state(['role' => 'coordinator'])
-            ->create();
+        $coordinators = User::factory()->count(5)->coordinator()->create();
 
-        // Create 10 schools with coordinators
+        // Create 10 schools and assign coordinators
         $schools = School::factory()
             ->count(10)
             ->make()
@@ -37,16 +34,13 @@ class DatabaseSeeder extends Seeder
                 $coordinator = $coordinators->random();
                 $school->coordinator_id = $coordinator->id;
                 $school->save();
-                $school->users()->attach($coordinator->id); // attach user to school
+                $school->users()->attach($coordinator->id);
             });
 
         // Create 15 tutors
-        $tutors = User::factory()
-            ->count(15)
-            ->state(['role' => 'tutor'])
-            ->create();
+        $tutors = User::factory()->count(15)->tutor()->create();
 
-        // Each tutor has availability & slots
+        // Add tutor availability
         $tutors->each(function ($tutor) {
             TutorAvailability::factory()
                 ->count(3)
@@ -60,17 +54,14 @@ class DatabaseSeeder extends Seeder
         });
 
         // Create 40 students and assign to schools
-        $students = User::factory()
-            ->count(40)
-            ->state(['role' => 'student'])
-            ->create();
+        $students = User::factory()->count(40)->student()->create();
 
         $students->each(function ($student) use ($schools) {
             $school = $schools->random();
             $school->users()->attach($student->id);
         });
 
-        // Create 20 curricula with creators
+        // Create 20 curricula
         $curricula = Curriculum::factory()
             ->count(20)
             ->make()
@@ -114,22 +105,17 @@ class DatabaseSeeder extends Seeder
             Booking::factory()
                 ->for($session)
                 ->for($session->student, 'student')
-                ->for($session->tutor, 'creator') // assuming tutor booked it
+                ->for($session->tutor, 'creator')
                 ->for(TutorAvailabilitySlot::inRandomOrder()->first(), 'slot')
                 ->create();
         });
 
         // Notifications
-        Notification::factory()
-            ->count(20)
-            ->create();
+        Notification::factory()->count(20)->create();
 
-        // Add languages to some users
+        // Add languages to 30 random users
         User::inRandomOrder()->take(30)->each(function ($user) {
-            Language::factory()
-                ->count(1)
-                ->for($user)
-                ->create();
+            Language::factory()->count(1)->for($user)->create();
         });
     }
 }

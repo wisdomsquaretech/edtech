@@ -25,9 +25,9 @@ class TutorStudentSessionLookupFactory extends Factory
         return [
             'session_id' => Session::factory(),
             'user_id' => User::factory(),
-            'completed' => fake()->numberBetween(-10000, 10000),
-            'incomplete' => fake()->numberBetween(-10000, 10000),
-            'absent' => fake()->numberBetween(-10000, 10000),
+            'completed' => fake()->numberBetween(1, 10000),
+            'incomplete' => fake()->numberBetween(1, 10000),
+            'absent' => fake()->numberBetween(1, 10000),
         ];
     }
 }
