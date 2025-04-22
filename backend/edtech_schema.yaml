@@ -63,6 +63,7 @@ models:
     softDeletes
     relationships:
       belongsTo: Curriculum
+      hasMany: Session
 
   TutorAvailability:
     tutor_id: id foreign:users.id
@@ -108,6 +109,8 @@ models:
         - "User:tutor"
         - "User:student"
         - "Lesson:lesson"
+      hasMany:
+          SessionAttendance, SessionStatus, TutorHoursLookup, TutorStudentSessionLookup, Booking, SessionFeedback
 
   SessionAttendance:
     session_id: id foreign
@@ -149,6 +152,7 @@ models:
     softDeletes
     relationships:
       belongsTo: Session, User
+      hasMany: Booking
 
   Booking:
     student_id: id foreign:users.id

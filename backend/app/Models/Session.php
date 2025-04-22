@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Session extends Model
@@ -70,5 +71,35 @@ class Session extends Model
     public function lesson(): BelongsTo
     {
         return $this->belongsTo(Lesson::class);
+    }
+
+    public function sessionAttendances(): HasMany
+    {
+        return $this->hasMany(SessionAttendance::class);
+    }
+
+    public function sessionStatuses(): HasMany
+    {
+        return $this->hasMany(SessionStatus::class);
+    }
+
+    public function tutorHoursLookups(): HasMany
+    {
+        return $this->hasMany(TutorHoursLookup::class);
+    }
+
+    public function tutorStudentSessionLookups(): HasMany
+    {
+        return $this->hasMany(TutorStudentSessionLookup::class);
+    }
+
+    public function bookings(): HasMany
+    {
+        return $this->hasMany(Booking::class);
+    }
+
+    public function sessionFeedbacks(): HasMany
+    {
+        return $this->hasMany(SessionFeedback::class);
     }
 }
