@@ -18,6 +18,7 @@ const StudentDashboard: React.FC = () => {
   const user = useCurrentUser();
 
   return (
+    
     <div className="min-h-screen bg-gray-50 font-sans flex">
       <Sidebar/>
       <div className="flex-1">

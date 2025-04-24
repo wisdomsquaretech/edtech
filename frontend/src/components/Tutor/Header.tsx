@@ -1,21 +1,33 @@
 import React from "react";
+import HoursLookup from "./HoursLookup";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
+
 
 interface HeaderProps {
   setNotificationsOpen: (open: boolean) => void;
   notificationsOpen: boolean;
+  // user: any;
+  greeting: string;
+  dateString: string;
+  
 }
 
-const Header: React.FC<HeaderProps> = ({ setNotificationsOpen, notificationsOpen }) => {
+
+const Header: React.FC<HeaderProps> = ({ setNotificationsOpen, notificationsOpen,  greeting,
+  dateString, }) => {
+
+    const {user} = useCurrentUser();
+
   return (
     <header className="bg-white shadow-sm px-6 py-4">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-800">Good morning, John!</h1>
-          <p className="text-gray-600">Friday, April 11, 2025</p>
+          <h1 className="text-2xl font-bold text-gray-800">{greeting}, {user?.name}</h1>
+          <p className="text-gray-600">{dateString}</p>
         </div>
         <div className="flex items-center space-x-4">
           <div className="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm font-medium">
-            <i className="fas fa-clock mr-2"></i>126 Hours Volunteered
+            {/* <HoursLookup/> */}
           </div>
           <button
             onClick={() => setNotificationsOpen(!notificationsOpen)}

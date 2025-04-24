@@ -1,5 +1,23 @@
-// // hooks/useAuth.ts
-// export const useAuth = () => {
+import { apiClient } from "../apiClient";
+
+export const login = async (
+  email: string,
+  password: string,
+) => {
+  return apiClient("login", "POST", {
+    email: email,
+    password: password,
+  });
+};
+
+export const register = async (payload: any) => {
+ 
+  return apiClient("register", "POST", payload );
+};
+
+
+
+// export const login = () => {
 //     const login = async (formData: any, userType: string) => {
 //       const response = await fetch("http://127.0.0.1:8000/api/login", {
 //         method: "POST",
@@ -26,4 +44,3 @@
   
 //     return { login, register };
 //   };
-  

@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import LogoutButton from "@/utils/logout";
 
 interface SidebarProps {
   collapsed: boolean;
@@ -7,6 +8,7 @@ interface SidebarProps {
   setActiveTab: (tab: string) => void;
   language: string;
   setLanguage: (lang: string) => void;
+  user: any;
 }
 
 const Sidebar: React.FC<SidebarProps> = ({
@@ -16,7 +18,11 @@ const Sidebar: React.FC<SidebarProps> = ({
   setActiveTab,
   language,
   setLanguage,
+  user,
 }) => {
+
+  const [isOpen, setIsOpen] = useState(true); 
+
   const menuItems = [
     { id: 'dashboard', icon: 'fa-home', label: 'Dashboard' },
     { id: 'calendar', icon: 'fa-calendar-alt', label: 'Calendar' },
@@ -35,7 +41,7 @@ const Sidebar: React.FC<SidebarProps> = ({
               JD
             </div>
             <div>
-              <h3 className="font-semibold">John Doe</h3>
+              <h3 className="font-semibold">{user?.name}</h3>
               <p className="text-xs text-gray-500">Volunteer Tutor</p>
             </div>
           </div>
@@ -56,9 +62,8 @@ const Sidebar: React.FC<SidebarProps> = ({
             <li key={item.id}>
               <button
                 onClick={() => setActiveTab(item.id)}
-                className={`flex items-center w-full px-4 py-3 ${
-                  activeTab === item.id ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'
-                } transition-colors duration-200`}
+                className={`flex items-center w-full px-4 py-3 ${activeTab === item.id ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'
+                  } transition-colors duration-200`}
               >
                 <i className={`fas ${item.icon}`}></i>
                 {!collapsed && <span className="ml-3">{item.label}</span>}
@@ -70,6 +75,14 @@ const Sidebar: React.FC<SidebarProps> = ({
 
       <div className="p-4 border-t border-gray-100">
         <div className="flex items-center space-x-3">
+          <div className="border-t border-gray-100 pt-4">
+            <div className={`flex items-center p-3 text-gray-600 hover:bg-gray-50 cursor-pointer ${isOpen ? '' : 'justify-center'}`}>
+              <i className="fas fa-sign-out-alt"></i>
+              <span className={`ml-3 ${isOpen ? 'opacity-100' : 'opacity-0 hidden'}`}>
+                <LogoutButton />
+              </span>
+            </div>
+          </div>
           <i className="fas fa-globe text-gray-500"></i>
           {!collapsed && (
             <select

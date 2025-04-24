@@ -8,8 +8,13 @@ import WeeklyCalendar from "@/components/Tutor/WeeklyCalendar";
 import Availability from "@/components/Tutor/Availability";
 import LessonPlans from "@/components/Tutor/LessonPlans";
 import AnalyticsChart from "@/components/Tutor/AnalyticsChart";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
+import GreetingComponent from "@/utils/greeting";
 
 const TutorDashboard: React.FC = () => {
+  const user = useCurrentUser();
+  const [greeting, setGreeting] = useState('');
+  const [dateString, setDateString] = useState('');
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [activeTab, setActiveTab] = useState("dashboard");
   const [language, setLanguage] = useState("english");
@@ -24,18 +29,29 @@ const TutorDashboard: React.FC = () => {
         setActiveTab={setActiveTab}
         language={language}
         setLanguage={setLanguage}
+        user={user} 
+        
       />
       <main className="flex-1 overflow-y-auto">
+        <GreetingComponent 
+          onGreetingChange={(greeting, date) => {
+            setGreeting(greeting);
+            setDateString(date);
+          }}
+        />
         <Header
           setNotificationsOpen={setNotificationsOpen}
           notificationsOpen={notificationsOpen}
+          // user={user}
+          greeting={greeting}
+          dateString={dateString}
         />
         {notificationsOpen && <Notifications />}
         <div className="p-6">
           <UpcomingSessions />
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
             <WeeklyCalendar />
-            <Availability />
+            <Availability/>
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <LessonPlans />

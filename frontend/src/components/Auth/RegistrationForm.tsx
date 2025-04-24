@@ -2,13 +2,9 @@
 import React, { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { FormFields } from "./FormFields";
+import { login, register} from "../../api/auth/auth";
 import { validateRegisterForm } from "@/utils/validation";
-import { useAuth } from "@/hooks/useAuth";
-
-
-// type Props = {
-//   authType: string;
-// };
+// import { useAuth } from "@/hooks/useAuth";  *****  running code ***
 
 const RegistrationForm = () => {
   const [userType, setUserType] = useState("student");
@@ -17,7 +13,8 @@ const RegistrationForm = () => {
   const [errors, setErrors] = useState({});
   const searchParams = useSearchParams();
   const router = useRouter();
-  const { login, register } = useAuth();
+  
+  //const { login, register } = useAuth();    *****  running code ***
 
   useEffect(() => {
     const typeParam = searchParams.get("type");
@@ -40,8 +37,9 @@ const RegistrationForm = () => {
     setErrors({});
     try {
       if (isLoginMode) {
-        const data = await login(formData, userType);
+        //const data = await login(formData, userType);  *****  running code ***
 
+        const data = await login(formData.email, formData.password);
          // Save token and user data
         localStorage.setItem("auth_token", data.token);
         localStorage.setItem("auth_user", JSON.stringify(data.user));
@@ -50,7 +48,6 @@ const RegistrationForm = () => {
         document.cookie = `role=${data.user.role}; path=/; max-age=86400;`;
         //document.cookie = `name=${encodeURIComponent(data.user.name)}; path=/; max-age=86400;`;
 
-        //router.push(data.user.role === "tutor" ? "/tutor" : "/student");
         if (data.user.role === "tutor") {
           window.location.href = "/tutor";
         } else {
@@ -65,6 +62,7 @@ const RegistrationForm = () => {
         }
         
         const payload = { ...formData, name: formData.fullName, password_confirmation: formData.confirmPassword, role: userType };
+        //const data = await register(formData.email, formData.password);
         const data = await register(payload);
         localStorage.setItem("auth_token", data.token);
         alert("Registration successful!");
