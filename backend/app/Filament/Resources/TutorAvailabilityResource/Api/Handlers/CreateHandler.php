@@ -1,12 +1,15 @@
 <?php
+
 namespace App\Filament\Resources\TutorAvailabilityResource\Api\Handlers;
 
 use Illuminate\Http\Request;
 use Rupadana\ApiService\Http\Handlers;
 use App\Filament\Resources\TutorAvailabilityResource;
 use App\Filament\Resources\TutorAvailabilityResource\Api\Requests\CreateTutorAvailabilityRequest;
+use App\Models\TutorAvailability;
 
-class CreateHandler extends Handlers {
+class CreateHandler extends Handlers
+{
     public static string | null $uri = '/';
     public static string | null $resource = TutorAvailabilityResource::class;
 
@@ -15,7 +18,8 @@ class CreateHandler extends Handlers {
         return Handlers::POST;
     }
 
-    public static function getModel() {
+    public static function getModel()
+    {
         return static::$resource::getModel();
     }
 
@@ -28,10 +32,21 @@ class CreateHandler extends Handlers {
     public function handler(CreateTutorAvailabilityRequest $request)
     {
         $model = new (static::getModel());
+        // $model->fill($request->all());
+        // $model->save();
 
-        $model->fill($request->all());
+        $days = array_map('trim', explode(',', strtolower($request['day_of_week'])));
 
-        $model->save();
+        $created = [];
+
+        foreach ($days as $day) {
+            $created[] = TutorAvailability::create([
+                'tutor_id'   => $request['tutor_id'],
+                'day_of_week' => $day,
+                'start_time' => $request['start_time'],
+                'end_time'   => $request['end_time'],
+            ]);
+        }
 
         return static::sendSuccessResponse($model, "Successfully Create Resource");
     }

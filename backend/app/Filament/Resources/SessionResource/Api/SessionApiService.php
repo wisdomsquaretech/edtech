@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Filament\Resources\SessionResource\Api;
 
 use Rupadana\ApiService\ApiService;
@@ -17,8 +18,8 @@ class SessionApiService extends ApiService
             Handlers\UpdateHandler::class,
             Handlers\DeleteHandler::class,
             Handlers\PaginationHandler::class,
-            Handlers\DetailHandler::class
+            Handlers\DetailHandler::class,
+            Handlers\SessionsByTutorHandler::class
         ];
-
     }
 }

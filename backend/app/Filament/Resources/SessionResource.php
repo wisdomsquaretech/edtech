@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\SessionResource\Pages;
-use App\Filament\Resources\SessionResource\RelationManagers;
 use App\Models\Session;
 use Filament\Forms;
 use Filament\Forms\Components\Select;
@@ -11,8 +10,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\SessionResource\Api\SessionApiService;
 
 class SessionResource extends Resource
 {
@@ -156,10 +154,9 @@ class SessionResource extends Resource
         return 'id'; // or another unique column
     }
 
-    // public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
-    // {
-    //     return parent::getEloquentQuery()
-    //         ->with(['school', 'tutor', 'student', 'lesson']);
-    // }
-
+    public static function api(): void
+    {
+        // Explicitly call the API service to initialize handlers
+        SessionApiService::handlers();
+    }
 }
