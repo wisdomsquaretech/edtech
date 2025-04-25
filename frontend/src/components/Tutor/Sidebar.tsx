@@ -28,7 +28,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     { id: 'calendar', icon: 'fa-calendar-alt', label: 'Calendar' },
     { id: 'lessons', icon: 'fa-book', label: 'Lesson Plans' },
     { id: 'availability', icon: 'fa-clock', label: 'Availability' },
-    { id: 'analytics', icon: 'fa-chart-bar', label: 'Analytics' },
+    // { id: 'analytics', icon: 'fa-chart-bar', label: 'Analytics' },
     { id: 'settings', icon: 'fa-cog', label: 'Settings' },
   ];
 

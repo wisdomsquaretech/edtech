@@ -10,6 +10,10 @@ import LessonPlans from "@/components/Tutor/LessonPlans";
 import AnalyticsChart from "@/components/Tutor/AnalyticsChart";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import GreetingComponent from "@/utils/greeting";
+import TutorDashboardCalendar from "@/components/Tutor/TutorDashboardCalendar";
+//import TutorDashboardLessonPlans from "@/components/Tutor/TutorLessonPlans";
+import TutorDashboardLessonPlans from "@/components/Tutor/TutorDashboardLessonPlans";
+import TutorDashboardAvailability from "@/components/Tutor/TutorDashboardAvailability";
 
 const TutorDashboard: React.FC = () => {
   const user = useCurrentUser();
@@ -33,6 +37,7 @@ const TutorDashboard: React.FC = () => {
         
       />
       <main className="flex-1 overflow-y-auto">
+      
         <GreetingComponent 
           onGreetingChange={(greeting, date) => {
             setGreeting(greeting);
@@ -48,15 +53,40 @@ const TutorDashboard: React.FC = () => {
         />
         {notificationsOpen && <Notifications />}
         <div className="p-6">
-          <UpcomingSessions />
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-            <WeeklyCalendar />
-            <Availability/>
-          </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <LessonPlans />
-            <AnalyticsChart />
-          </div>
+          {activeTab === 'dashboard' && (
+          <>
+            <UpcomingSessions />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+              <WeeklyCalendar />
+              <Availability/>
+            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <LessonPlans />
+              <AnalyticsChart />
+            </div>
+            </>
+          )}
+
+          {/* Calendar View */}
+          {activeTab === 'calendar' && (
+            <>
+              <TutorDashboardCalendar />
+            </>
+          )}
+
+          {/* Lesson Plans View */}
+          {activeTab === 'lessons' && (
+            <>
+              <TutorDashboardLessonPlans />
+            </>      
+          )}
+
+          {/* Availability */}
+          {activeTab === 'availability' && (
+            <>
+              <TutorDashboardAvailability />
+            </>      
+          )}
         </div>
       </main>
     </div>

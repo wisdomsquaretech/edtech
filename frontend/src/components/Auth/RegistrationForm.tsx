@@ -38,19 +38,22 @@ const RegistrationForm = () => {
     try {
       if (isLoginMode) {
         //const data = await login(formData, userType);  *****  running code ***
-
         const data = await login(formData.email, formData.password);
          // Save token and user data
         localStorage.setItem("auth_token", data.token);
+        //alert(JSON.stringify(data));
         localStorage.setItem("auth_user", JSON.stringify(data.user));
-
+        alert(data.role);
         // ✅ Set cookie for role-based middleware (expires in 1 day)
-        document.cookie = `role=${data.user.role}; path=/; max-age=86400;`;
+        document.cookie = `role=${data.role}; path=/; max-age=86400;`;
         //document.cookie = `name=${encodeURIComponent(data.user.name)}; path=/; max-age=86400;`;
+        document.cookie = `auth_token=${data.token}; path=/; max-age=86400;`;
 
-        if (data.user.role === "tutor") {
+        console.log(typeof data.role);
+        if (data.role[0] === "tutor") {
           window.location.href = "/tutor";
         } else {
+          
           window.location.href = "/student";
         }
       } else {

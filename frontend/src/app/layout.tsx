@@ -10,7 +10,7 @@ import LanguageBannerSection from "@/components/LanguageBannerSection";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "EdTech Platform",
+  title: "United Lingua",
   description: "An educational technology platform for tutors and students",
 };
 
