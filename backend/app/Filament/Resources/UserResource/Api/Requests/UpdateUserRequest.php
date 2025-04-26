@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\UserResource\Api\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateUserRequest extends FormRequest
 {
@@ -22,14 +23,10 @@ class UpdateUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-			'name' => 'required|string',
-			'email' => 'required|string',
-			'email_verified_at' => 'required',
-			'remember_token' => 'required|string',
-			'password' => 'required|string',
-			'role' => 'required|string',
-			'timezone' => 'required|string',
-			'bio' => 'required|string'
-		];
+            'name' => 'required|string',
+            'email' => 'required|email',
+            'password' => 'required|string|min:8|confirmed',
+            'role' => ['required', 'string', Rule::exists('roles', 'name')],
+        ];
     }
 }
