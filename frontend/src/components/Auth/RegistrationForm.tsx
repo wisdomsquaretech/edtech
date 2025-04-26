@@ -45,16 +45,25 @@ const RegistrationForm = () => {
         localStorage.setItem("auth_user", JSON.stringify(data.user));
         alert(data.role);
         // ✅ Set cookie for role-based middleware (expires in 1 day)
-        document.cookie = `role=${data.role}; path=/; max-age=86400;`;
+        document.cookie = `role=${data.role[0]}; path=/; max-age=86400;`;
+        document.cookie = `token=${data.token}; path=/; max-age=86400;`;
+
         //document.cookie = `name=${encodeURIComponent(data.user.name)}; path=/; max-age=86400;`;
         document.cookie = `auth_token=${data.token}; path=/; max-age=86400;`;
 
         console.log(typeof data.role);
-        if (data.role[0] === "tutor") {
-          window.location.href = "/tutor";
-        } else {
-          
-          window.location.href = "/student";
+        switch (data.role[0]) {
+          case "tutor":            
+            window.location.href = '/tutor';
+            break;
+          case "student":
+           window.location.href = '/student';
+            break;   
+          case "coordinator":
+            window.location.href = '/school';
+            break;
+          default:
+            window.location.href = '/school';
         }
       } else {
         const validationErrors = validateRegisterForm(formData);
