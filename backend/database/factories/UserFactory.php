@@ -27,7 +27,7 @@ class UserFactory extends Factory
             'email_verified_at' => fake()->dateTime(),
             'remember_token' => fake()->uuid(),
             'password' => fake()->password(),
-            'timezone' => fake()->word(),
+            'timezone' => fake()->timezone(),
             'bio' => fake()->text(),
         ];
     }
@@ -37,32 +37,8 @@ class UserFactory extends Factory
         return $this->afterCreating(function (User $user) {
             $roles = ['tutor', 'student', 'coordinator'];
             $role = fake()->randomElement($roles);
-
             Role::firstOrCreate(['name' => $role]);
-
-            // Assign the role
             $user->assignRole($role);
-        });
-    }
-
-    public function coordinator(): static
-    {
-        return $this->afterCreating(function (User $user) {
-            $user->assignRole('coordinator');
-        });
-    }
-
-    public function tutor(): static
-    {
-        return $this->afterCreating(function (User $user) {
-            $user->assignRole('tutor');
-        });
-    }
-
-    public function student(): static
-    {
-        return $this->afterCreating(function (User $user) {
-            $user->assignRole('student');
         });
     }
 }
