@@ -14,6 +14,8 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Forms\Get;
+use Closure;
 
 class TutorAvailabilityResource extends Resource
 {
@@ -56,9 +58,23 @@ class TutorAvailabilityResource extends Resource
                 //Forms\Components\TextInput::make('start_time')
                 //Forms\Components\TextInput::make('end_time')
                 TimePicker::make('start_time')
-                    ->required(),
+                    ->required()
+                    ->format('H:i')
+                    ->seconds(false)
+                    ->rules(['required', 'date_format:H:i']),
                 TimePicker::make('end_time')
-                    ->required(),
+                    ->required()
+                    ->format('H:i')
+                    ->seconds(false)
+                    ->rules([
+                        'required',
+                        'date_format:H:i',
+                        fn(Get $get): Closure => function (string $attribute, $value, Closure $fail) use ($get) {
+                            if (strtotime($value) <= strtotime($get('start_time'))) {
+                                $fail('End time must be after start time.');
+                            }
+                        },
+                    ]),
             ]);
     }
 
