@@ -22,10 +22,10 @@ class CreateSchoolRequest extends FormRequest
     public function rules(): array
     {
         return [
-			'name' => 'required|string',
-			'email' => 'required|string',
-			'address' => 'required|string',
-			'coordinator_id' => 'required'
-		];
+            'name' => 'required|string',
+            'email' => 'required|email',
+            'address' => 'required|string|min:10|max:500',
+            'coordinator_id' => 'required|exists:users,id'
+        ];
     }
 }

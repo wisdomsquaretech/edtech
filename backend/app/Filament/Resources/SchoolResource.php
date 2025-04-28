@@ -25,6 +25,8 @@ class SchoolResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('name')
                     ->required()
+                    ->regex('/^[a-zA-Z\s]+$/')
+                    ->minLength(2)
                     ->maxLength(255),
                 Forms\Components\TextInput::make('email')
                     ->email()
@@ -32,6 +34,8 @@ class SchoolResource extends Resource
                     ->maxLength(255),
                 Forms\Components\Textarea::make('address')
                     ->required()
+                    ->minLength(10)
+                    ->maxLength(500)
                     ->columnSpanFull(),
                 Forms\Components\Select::make('coordinator_id')
                     ->relationship('coordinator', 'name')
