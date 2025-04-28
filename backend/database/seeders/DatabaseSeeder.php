@@ -24,13 +24,18 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class
         ]);
         // Create 5 coordinators
-        $coordinators = User::factory()->count(5)->coordinator()->create();
+        $coordinators = User::factory()
+            ->count(5)
+            ->create()
+            ->each(function (User $user) {
+                $user->syncRoles(['coordinator']);
+            });
 
         // Create 10 schools and assign coordinators
         $schools = School::factory()
             ->count(10)
-            ->make()
-            ->each(function ($school) use ($coordinators) {
+            ->create()
+            ->each(function (School $school) use ($coordinators) {
                 $coordinator = $coordinators->random();
                 $school->coordinator_id = $coordinator->id;
                 $school->save();
@@ -38,10 +43,15 @@ class DatabaseSeeder extends Seeder
             });
 
         // Create 15 tutors
-        $tutors = User::factory()->count(15)->tutor()->create();
+        $tutors = User::factory()
+            ->count(15)
+            ->create()
+            ->each(function (User $user) {
+                $user->syncRoles(['tutor']);
+            });
 
         // Add tutor availability
-        $tutors->each(function ($tutor) {
+        $tutors->each(function (User $tutor) {
             TutorAvailability::factory()
                 ->count(3)
                 ->for($tutor, 'tutor')
@@ -53,10 +63,16 @@ class DatabaseSeeder extends Seeder
                 ->create();
         });
 
-        // Create 40 students and assign to schools
-        $students = User::factory()->count(40)->student()->create();
+        // Create 40 students
+        $students = User::factory()
+            ->count(40)
+            ->create()
+            ->each(function (User $user) {
+                $user->syncRoles(['student']);
+            });
 
-        $students->each(function ($student) use ($schools) {
+        // Assign students to random schools
+        $students->each(function (User $student) use ($schools) {
             $school = $schools->random();
             $school->users()->attach($student->id);
         });
@@ -64,14 +80,14 @@ class DatabaseSeeder extends Seeder
         // Create 20 curricula
         $curricula = Curriculum::factory()
             ->count(20)
-            ->make()
-            ->each(function ($curriculum) use ($tutors) {
+            ->create()
+            ->each(function (Curriculum $curriculum) use ($tutors) {
                 $curriculum->creator_id = $tutors->random()->id;
                 $curriculum->save();
             });
 
         // Add lessons to curricula
-        $curricula->each(function ($curriculum) {
+        $curricula->each(function (Curriculum $curriculum) {
             Lesson::factory()
                 ->count(3)
                 ->for($curriculum)
@@ -81,8 +97,8 @@ class DatabaseSeeder extends Seeder
         // Create 30 sessions
         $sessions = Session::factory()
             ->count(30)
-            ->make()
-            ->each(function ($session) use ($tutors, $students, $schools) {
+            ->create()
+            ->each(function (Session $session) use ($tutors, $students, $schools) {
                 $session->tutor_id = $tutors->random()->id;
                 $session->student_id = $students->random()->id;
                 $session->school_id = $schools->random()->id;
@@ -91,7 +107,7 @@ class DatabaseSeeder extends Seeder
             });
 
         // Add feedback, attendance, and booking for sessions
-        $sessions->each(function ($session) {
+        $sessions->each(function (Session $session) {
             SessionFeedback::factory()
                 ->for($session)
                 ->for($session->student)
@@ -111,11 +127,18 @@ class DatabaseSeeder extends Seeder
         });
 
         // Notifications
-        Notification::factory()->count(20)->create();
+        Notification::factory()
+            ->count(20)
+            ->create();
 
         // Add languages to 30 random users
-        User::inRandomOrder()->take(30)->each(function ($user) {
-            Language::factory()->count(1)->for($user)->create();
-        });
+        User::inRandomOrder()
+            ->take(30)
+            ->each(function (User $user) {
+                Language::factory()
+                    ->count(1)
+                    ->for($user)
+                    ->create();
+            });
     }
 }
