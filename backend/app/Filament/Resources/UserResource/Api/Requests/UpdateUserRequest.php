@@ -27,6 +27,8 @@ class UpdateUserRequest extends FormRequest
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:8|confirmed',
             'role' => ['required', 'string', Rule::exists('roles', 'name')],
+            'timezone' => 'sometimes|string',
+            'bio' => 'sometimes|string|min:2|max:255',
         ];
     }
 }
