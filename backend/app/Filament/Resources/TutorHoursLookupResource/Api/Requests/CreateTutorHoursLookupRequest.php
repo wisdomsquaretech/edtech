@@ -22,9 +22,9 @@ class CreateTutorHoursLookupRequest extends FormRequest
     public function rules(): array
     {
         return [
-			'session_id' => 'required',
-			'tutor_id' => 'required',
-			'duration' => 'required|integer'
-		];
+            'session_id' => 'required|exists:sessions,id',
+            'tutor_id' => 'required|exists:users,id',
+            'duration' => 'required|integer|min:0'
+        ];
     }
 }
