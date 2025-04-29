@@ -22,17 +22,17 @@ class UpdateSessionRequest extends FormRequest
     public function rules(): array
     {
         return [
-			'school_id' => 'required',
-			'tutor_id' => 'required',
-			'student_id' => 'required',
-			'lesson_id' => 'required',
-			'start_time' => 'required',
-			'end_time' => 'required',
-			'meeting_link' => 'required|string',
-			'notes' => 'required|string',
-			'platform' => 'required|string',
-			'checklist_done' => 'required',
-			'status' => 'required|string'
-		];
+            'school_id' => 'required|exists:schools,id',
+            'tutor_id' => 'required|exists:users,id',
+            'student_id' => 'required|exists:users,id',
+            'lesson_id' => 'required|exists:lessons,id',
+            'start_time' => 'required|date_format:d-m-Y H:i:s',
+            'end_time' => 'required|date_format:d-m-Y H:i:s',
+            'meeting_link' => 'required|url',
+            'notes' => 'sometimes|string|min:5|max:255',
+            'platform' => 'required|string|in:zoom,jitsi',
+            'checklist_done' => 'required|boolean',
+            'status' => 'required|string|in:scheduled,postponed,completed,cancelled'
+        ];
     }
 }
