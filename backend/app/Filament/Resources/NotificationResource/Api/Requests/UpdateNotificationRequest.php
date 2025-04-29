@@ -22,10 +22,10 @@ class UpdateNotificationRequest extends FormRequest
     public function rules(): array
     {
         return [
-			'title' => 'required|string',
-			'message' => 'required|string',
-			'status' => 'required|string',
-			'creator_id' => 'required'
-		];
+            'title' => 'required|string|min:5|max:255',
+            'message' => 'required|string|min:10|max:500',
+            'status' => 'required|string|in:pending,viewed',
+            'creator_id' => 'required|exists:users,id'
+        ];
     }
 }

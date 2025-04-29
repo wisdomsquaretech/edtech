@@ -22,11 +22,11 @@ class CreateSessionFeedbackRequest extends FormRequest
     public function rules(): array
     {
         return [
-			'session_id' => 'required',
-			'user_id' => 'required',
-			'rating' => 'required|integer',
-			'comments' => 'required|string',
-			'submitted_at' => 'required'
-		];
+            'session_id' => 'required|exists:sessions,id',
+            'user_id' => 'required|exists:users,id',
+            'rating' => 'required|integer|min:0',
+            'comments' => 'sometimes|string|min:5|max:255',
+            'submitted_at' => 'required|date_format:d-m-Y H:i:s'
+        ];
     }
 }
