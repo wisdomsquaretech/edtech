@@ -11,6 +11,8 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use App\Filament\Resources\SessionResource\Api\SessionApiService;
+use Filament\Forms\Get;
+use Closure;
 
 class SessionResource extends Resource
 {
@@ -50,7 +52,15 @@ class SessionResource extends Resource
                 Forms\Components\DateTimePicker::make('start_time')
                     ->required(),
                 Forms\Components\DateTimePicker::make('end_time')
-                    ->required(),
+                    ->required()
+                    ->rules([
+                        'required',
+                        fn(Get $get): Closure => function (string $attribute, $value, Closure $fail) use ($get) {
+                            if (strtotime($value) <= strtotime($get('start_time'))) {
+                                $fail('End time must be after start time.');
+                            }
+                        },
+                    ]),
                 Forms\Components\TextInput::make('meeting_link')
                     ->required()
                     ->maxLength(255),

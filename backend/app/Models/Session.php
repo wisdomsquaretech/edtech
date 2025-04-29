@@ -43,8 +43,8 @@ class Session extends Model
         'tutor_id' => 'integer',
         'student_id' => 'integer',
         'lesson_id' => 'integer',
-        'start_time' => 'datetime',
-        'end_time' => 'datetime',
+        'start_time' => 'datetime:d-m-Y H:i:s',
+        'end_time' => 'datetime:d-m-Y H:i:s',
         'checklist_done' => 'boolean',
     ];
 

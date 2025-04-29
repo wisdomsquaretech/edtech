@@ -26,6 +26,8 @@ class UserResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('name')
                     ->required()
+                    ->regex('/^[a-zA-Z\s]+$/')
+                    ->minLength(2)
                     ->maxLength(255),
                 Forms\Components\TextInput::make('email')
                     ->email()

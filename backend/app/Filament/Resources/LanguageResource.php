@@ -28,9 +28,14 @@ class LanguageResource extends Resource
                     ->required(),
                 Forms\Components\TextInput::make('code')
                     ->required()
-                    ->maxLength(255),
+                    ->unique(ignoreRecord: true)
+                    ->rule('alpha')
+                    ->minLength(2)
+                    ->maxLength(10),
                 Forms\Components\TextInput::make('name')
                     ->required()
+                    ->rule('alpha')
+                    ->minLength(2)
                     ->maxLength(255),
                 Forms\Components\Toggle::make('is_active')
                     ->required(),

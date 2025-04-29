@@ -22,13 +22,18 @@ class UpdateTutorAvailabilitySlotRequest extends FormRequest
     public function rules(): array
     {
         return [
-			'tutor_id' => 'required',
-			'slot_date' => 'required|date',
-			'start_time' => 'required',
-			'end_time' => 'required',
-			'capacity' => 'required|integer',
-			'is_booked' => 'required',
-			'is_deleted' => 'required'
-		];
+            'tutor_id' => 'required|exists:users,id',
+            'slot_date' => 'required|date|date_format:d-m-Y',
+            'start_time' => ['required', 'date_format:H:i'],
+            'end_time' => ['required', 'date_format:H:i', function ($attribute, $value, $fail) {
+                $startTime = request()->input('start_time');
+                if ($startTime && strtotime($startTime) >= strtotime($value)) {
+                    $fail('The end time must be after the start time.');
+                }
+            }],
+            'capacity' => 'required|integer',
+            'is_booked' => 'required|boolean',
+            'is_deleted' => 'sometimes|date_format:d-m-Y H:i:s'
+        ];
     }
 }

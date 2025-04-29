@@ -22,7 +22,7 @@ class CreateTutorAvailabilityRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'tutor_id' => 'required',
+            'tutor_id' => 'required|exists:users,id',
             'day_of_week' => ['required', 'string', function ($attribute, $value, $fail) {
                 $validDays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
                 $days = array_map('trim', explode(',', strtolower($value)));
@@ -33,8 +33,8 @@ class CreateTutorAvailabilityRequest extends FormRequest
                     }
                 }
             }],
-            'start_time' => ['required', 'date_format:H:i:s'],
-            'end_time' => ['required', 'date_format:H:i:s', function ($attribute, $value, $fail) {
+            'start_time' => ['required', 'date_format:H:i'],
+            'end_time' => ['required', 'date_format:H:i', function ($attribute, $value, $fail) {
                 $startTime = request()->input('start_time');
                 if ($startTime && strtotime($startTime) >= strtotime($value)) {
                     $fail('The end time must be after the start time.');

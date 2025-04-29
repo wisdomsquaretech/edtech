@@ -22,10 +22,10 @@ class UpdateLanguageRequest extends FormRequest
     public function rules(): array
     {
         return [
-			'user_id' => 'required',
-			'code' => 'required|string',
-			'name' => 'required|string',
-			'is_active' => 'required'
-		];
+            'user_id' => 'required|exists:users,id',
+            'code' => 'required|min:2|max:10|alpha|unique:languages,code',
+            'name' => 'required|min:2|max:255|alpha',
+            'is_active' => 'required|boolean'
+        ];
     }
 }

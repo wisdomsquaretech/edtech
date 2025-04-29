@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Scopes\OwnershipScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -36,5 +37,15 @@ class Notification extends Model
     public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function getOwnerKeyName(): string
+    {
+        return 'creator_id';
+    }
+
+    protected static function booted()
+    {
+        static::addGlobalScope(new OwnershipScope);
     }
 }

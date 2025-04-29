@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Scopes\OwnershipScope;
+use DateTimeInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -34,13 +36,23 @@ class TutorAvailabilitySlot extends Model
     protected $casts = [
         'id' => 'integer',
         'tutor_id' => 'integer',
-        'slot_date' => 'date',
+        'slot_date' => 'date:d-m-Y',
         'is_booked' => 'boolean',
-        'is_deleted' => 'timestamp',
+        'is_deleted' => 'datetime:d-m-Y H:i:s',
     ];
 
     public function tutor(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function getOwnerKeyName(): string
+    {
+        return 'tutor_id';
+    }
+
+    protected static function booted()
+    {
+        static::addGlobalScope(new OwnershipScope);
     }
 }
