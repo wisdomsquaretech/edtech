@@ -12,11 +12,13 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Forms\Get;
+use Closure;
 
 class SessionAttendanceResource extends Resource
 {
     protected static ?string $model = SessionAttendance::class;
-    
+
     public static function getNavigationGroup(): ?string
     {
         return 'Sessions';
@@ -44,7 +46,15 @@ class SessionAttendanceResource extends Resource
                 Forms\Components\DateTimePicker::make('joined_at')
                     ->required(),
                 Forms\Components\DateTimePicker::make('left_at')
-                    ->required(),
+                    ->required()
+                    ->rules([
+                        'required',
+                        fn(Get $get): Closure => function (string $attribute, $value, Closure $fail) use ($get) {
+                            if (strtotime($value) <= strtotime($get('joined_at'))) {
+                                $fail('The left time must be after the joined time.');
+                            }
+                        },
+                    ]),
             ]);
     }
 
