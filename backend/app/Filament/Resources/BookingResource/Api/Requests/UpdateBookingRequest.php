@@ -22,11 +22,11 @@ class UpdateBookingRequest extends FormRequest
     public function rules(): array
     {
         return [
-			'student_id' => 'required',
-			'slot_id' => 'required',
-			'session_id' => 'required',
-			'status' => 'required|string',
-			'creator_id' => 'required'
-		];
+            'student_id' => 'required|exists:users,id',
+            'slot_id' => 'required|exists:tutor_availability_slots,id',
+            'session_id' => 'required|exists:sessions,id',
+            'status' => 'required|string|in:booked,cancelled,completed',
+            'creator_id' => 'required|exists:users,id'
+        ];
     }
 }

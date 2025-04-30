@@ -32,8 +32,8 @@ class SessionAttendance extends Model
         'id' => 'integer',
         'session_id' => 'integer',
         'user_id' => 'integer',
-        'joined_at' => 'datetime',
-        'left_at' => 'datetime',
+        'joined_at' => 'datetime:d-m-Y H:i:s',
+        'left_at' => 'datetime:d-m-Y H:i:s',
     ];
 
     public function session(): BelongsTo

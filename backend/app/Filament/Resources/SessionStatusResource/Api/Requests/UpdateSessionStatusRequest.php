@@ -22,9 +22,9 @@ class UpdateSessionStatusRequest extends FormRequest
     public function rules(): array
     {
         return [
-			'session_id' => 'required',
-			'user_id' => 'required',
-			'status' => 'required|string'
-		];
+            'session_id' => 'required|exists:sessions,id',
+            'user_id' => 'required|exists:users,id',
+            'status' => 'required|string|in:completed,incomplete,absent'
+        ];
     }
 }

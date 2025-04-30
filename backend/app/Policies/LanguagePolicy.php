@@ -105,4 +105,12 @@ class LanguagePolicy
     {
         return $user->can('reorder_language');
     }
+
+    /**
+     * Determine whether the user can reorder.
+     */
+    public function owner(User $user): bool
+    {
+        return $user->can('owner_language');
+    }
 }

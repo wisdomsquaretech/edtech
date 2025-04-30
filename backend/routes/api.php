@@ -3,6 +3,7 @@
 use App\Filament\Resources\LanguageResource;
 use App\Filament\Resources\SessionResource;
 use App\Filament\Resources\SessionResource\Api\Handlers\SessionsByTutorHandler;
+use App\Filament\Resources\TutorAvailabilityResource\Api\Handlers\TutorAvailabilitiesByTutorHandler;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\UserController;
 use App\Models\Language;
@@ -27,6 +28,5 @@ Route::post('login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
     Route::get('/sessions/tutor/{tutor_id}', SessionsByTutorHandler::class);
+    Route::get('/tutor-availabilities/tutor/{tutor_id}', TutorAvailabilitiesByTutorHandler::class);
 });
-
- 

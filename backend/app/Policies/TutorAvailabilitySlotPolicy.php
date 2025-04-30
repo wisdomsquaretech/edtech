@@ -105,4 +105,9 @@ class TutorAvailabilitySlotPolicy
     {
         return $user->can('reorder_tutor::availability::slot');
     }
+
+    public function owner(User $user): bool
+    {
+        return $user->can('owner_tutor::availability::slot');
+    }
 }

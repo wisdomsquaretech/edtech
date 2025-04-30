@@ -22,11 +22,11 @@ class UpdateTutorStudentSessionLookupRequest extends FormRequest
     public function rules(): array
     {
         return [
-			'session_id' => 'required',
-			'user_id' => 'required',
-			'completed' => 'required|integer',
-			'incomplete' => 'required|integer',
-			'absent' => 'required|integer'
-		];
+            'session_id' => 'required|exists:sessions,id',
+            'user_id' => 'required|exists:users,id',
+            'completed' => 'required|integer|min:0',
+            'incomplete' => 'required|integer|min:0',
+            'absent' => 'required|integer|min:0'
+        ];
     }
 }

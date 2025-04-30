@@ -44,7 +44,9 @@ class SessionFeedbackResource extends Resource
                     ->required(),
                 Forms\Components\TextInput::make('rating')
                     ->required()
-                    ->numeric(),
+                    ->numeric()
+                    ->minValue(0)
+                    ->integer(),
                 Forms\Components\Textarea::make('comments')
                     ->columnSpanFull(),
                 Forms\Components\DateTimePicker::make('submitted_at')

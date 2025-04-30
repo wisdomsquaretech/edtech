@@ -43,7 +43,9 @@ class TutorHoursLookupResource extends Resource
                     ->required(),
                 Forms\Components\TextInput::make('duration')
                     ->required()
-                    ->numeric(),
+                    ->numeric()
+                    ->minValue(0)
+                    ->integer(),
             ]);
     }
 

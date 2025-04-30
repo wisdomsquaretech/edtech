@@ -105,4 +105,9 @@ class TutorAvailabilityPolicy
     {
         return $user->can('reorder_tutor::availability');
     }
+
+    public function owner(User $user): bool
+    {
+        return $user->can('owner_tutor::availability');
+    }
 }

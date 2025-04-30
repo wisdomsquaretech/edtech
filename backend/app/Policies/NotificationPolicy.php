@@ -105,4 +105,9 @@ class NotificationPolicy
     {
         return $user->can('reorder_notification');
     }
+
+    public function owner(User $user): bool
+    {
+        return $user->can('owner_notification');
+    }
 }

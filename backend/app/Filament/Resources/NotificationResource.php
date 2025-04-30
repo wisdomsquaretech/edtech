@@ -26,9 +26,12 @@ class NotificationResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('title')
                     ->required()
+                    ->minLength(5)
                     ->maxLength(255),
                 Forms\Components\Textarea::make('message')
                     ->required()
+                    ->minLength(10)
+                    ->maxLength(500)
                     ->columnSpanFull(),
                 Select::make('status')
                     ->label('Status')

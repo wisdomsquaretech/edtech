@@ -22,10 +22,15 @@ class UpdateSessionAttendanceRequest extends FormRequest
     public function rules(): array
     {
         return [
-			'session_id' => 'required',
-			'user_id' => 'required',
-			'joined_at' => 'required',
-			'left_at' => 'required'
-		];
+            'session_id' => 'required|exists:sessions,id',
+            'user_id' => 'required|exists:users,id',
+            'joined_at' => 'required|date_format:d-m-Y H:i:s',
+            'left_at' => ['required', 'date_format:d-m-Y H:i:s', function ($attribute, $value, $fail) {
+                $startTime = request()->input('joined_at');
+                if ($startTime && strtotime($startTime) >= strtotime($value)) {
+                    $fail('The left time must be after the joined time.');
+                }
+            }],
+        ];
     }
 }

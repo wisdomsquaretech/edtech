@@ -42,13 +42,19 @@ class TutorStudentSessionLookupResource extends Resource
                     ->required(),
                 Forms\Components\TextInput::make('completed')
                     ->required()
-                    ->numeric(),
+                    ->numeric()
+                    ->minValue(0)
+                    ->integer(),
                 Forms\Components\TextInput::make('incomplete')
                     ->required()
-                    ->numeric(),
+                    ->numeric()
+                    ->minValue(0)
+                    ->integer(),
                 Forms\Components\TextInput::make('absent')
                     ->required()
-                    ->numeric(),
+                    ->numeric()
+                    ->minValue(0)
+                    ->integer(),
             ]);
     }
 

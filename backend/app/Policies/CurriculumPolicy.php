@@ -105,4 +105,9 @@ class CurriculumPolicy
     {
         return $user->can('reorder_curriculum');
     }
+
+    public function owner(User $user): bool
+    {
+        return $user->can('owner_curriculum');
+    }
 }

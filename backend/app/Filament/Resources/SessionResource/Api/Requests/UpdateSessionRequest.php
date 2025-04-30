@@ -27,7 +27,12 @@ class UpdateSessionRequest extends FormRequest
             'student_id' => 'required|exists:users,id',
             'lesson_id' => 'required|exists:lessons,id',
             'start_time' => 'required|date_format:d-m-Y H:i:s',
-            'end_time' => 'required|date_format:d-m-Y H:i:s',
+            'end_time' => ['required', 'date_format:d-m-Y H:i:s', function ($attribute, $value, $fail) {
+                $startTime = request()->input('start_time');
+                if ($startTime && strtotime($startTime) >= strtotime($value)) {
+                    $fail('The end time must be after the start time.');
+                }
+            }],
             'meeting_link' => 'required|url',
             'notes' => 'sometimes|string|min:5|max:255',
             'platform' => 'required|string|in:zoom,jitsi',
