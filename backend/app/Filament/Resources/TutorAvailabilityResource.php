@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Resources\TutorAvailabilityResource\Api\TutorAvailabilityApiService;
 use App\Filament\Resources\TutorAvailabilityResource\Pages;
 use App\Filament\Resources\TutorAvailabilityResource\RelationManagers;
 use App\Models\TutorAvailability;
@@ -127,5 +128,11 @@ class TutorAvailabilityResource extends Resource
             'create' => Pages\CreateTutorAvailability::route('/create'),
             'edit' => Pages\EditTutorAvailability::route('/{record}/edit'),
         ];
+    }
+
+    public static function api(): void
+    {
+        // Explicitly call the API service to initialize handlers
+        TutorAvailabilityApiService::handlers();
     }
 }

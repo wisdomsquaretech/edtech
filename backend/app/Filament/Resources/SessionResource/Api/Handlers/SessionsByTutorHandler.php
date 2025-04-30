@@ -22,10 +22,7 @@ class SessionsByTutorHandler
         // Check if the user has permission to view sessions
         $user = $request->user();
         if (!$user->can('viewAny', Session::class)) {
-            //throw new HttpException(403, 'Unauthorized');
-            return response()->json([
-                'message' => 'Forbidden',
-            ], 403);
+            return response()->json(['message' => 'You do not have the read permissions for api/sessions/tutor'], 403);
         }
 
         // Fetch and return sessions for the given tutor_id
