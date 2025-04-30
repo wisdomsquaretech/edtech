@@ -1,5 +1,6 @@
 "use client";
-import React from 'react';
+import LogoutButton from '@/utils/logout';
+import React, { useState } from 'react';
 
 type Props = {
   collapsed: boolean;
@@ -7,7 +8,7 @@ type Props = {
   onToggle: () => void;
   onChangeTab: (tab: string) => void;
 };
-
+//const [isOpen, setIsOpen] = useState(true); 
 const Sidebar: React.FC<Props> = ({ collapsed, activeTab, onToggle, onChangeTab }) => {
   return (
     <div className={`${collapsed ? 'w-20' : 'w-64'} transition-all duration-300 ease-in-out bg-[#2A2B6B] text-white flex flex-col`}>
@@ -47,6 +48,16 @@ const Sidebar: React.FC<Props> = ({ collapsed, activeTab, onToggle, onChangeTab 
           ))}
         </ul>
       </div>
+      <div className="p-4 border-t border-gray-100">
+              <div className="flex items-center space-x-3">
+                <div className={`flex items-center rounded p-3 text-gray-600 hover:bg-indigo-800 cursor-pointer ${collapsed ? 'justify-center' : ''}`}>
+                    <i className="fas fa-sign-out-alt"></i>
+                    <span className={`ml-3 ${ collapsed ? 'opacity-0 hidden' : 'opacity-100 '}`}>
+                      <LogoutButton />
+                    </span>  
+                </div>
+              </div>
+            </div>
     </div>
   );
 };

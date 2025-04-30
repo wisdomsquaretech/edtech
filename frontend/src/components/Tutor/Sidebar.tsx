@@ -72,17 +72,20 @@ const Sidebar: React.FC<SidebarProps> = ({
           ))}
         </ul>
       </nav>
-
+      
       <div className="p-4 border-t border-gray-100">
         <div className="flex items-center space-x-3">
-          <div className="border-t border-gray-100 pt-4">
+          
             <div className={`flex items-center p-3 text-gray-600 hover:bg-gray-50 cursor-pointer ${isOpen ? '' : 'justify-center'}`}>
-              <i className="fas fa-sign-out-alt"></i>
-              <span className={`ml-3 ${isOpen ? 'opacity-100' : 'opacity-0 hidden'}`}>
+              <i className="fas fa-sign-out-alt" onClick={() => document.getElementById('logoutBtn')?.click()}></i>
+              {!collapsed && <span className="ml-3">
                 <LogoutButton />
-              </span>
+              </span>}
             </div>
-          </div>
+        </div>
+      </div>  
+      <div className="p-4 border-t border-gray-100">
+        <div className="flex items-center space-x-3">  
           <i className="fas fa-globe text-gray-500"></i>
           {!collapsed && (
             <select

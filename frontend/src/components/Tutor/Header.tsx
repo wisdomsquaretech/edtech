@@ -27,7 +27,7 @@ const Header: React.FC<HeaderProps> = ({ setNotificationsOpen, notificationsOpen
         </div>
         <div className="flex items-center space-x-4">
           <div className="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm font-medium">
-            {/* <HoursLookup/> */}
+            <HoursLookup/>
           </div>
           <button
             onClick={() => setNotificationsOpen(!notificationsOpen)}

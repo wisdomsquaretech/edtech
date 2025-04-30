@@ -5,7 +5,7 @@ import Header from "@/components/Tutor/Header";
 import Notifications from "@/components/Tutor/Notifications";
 import UpcomingSessions from "@/components/Tutor/UpcomingSessions";
 import WeeklyCalendar from "@/components/Tutor/WeeklyCalendar";
-import Availability from "@/components/Tutor/Availability";
+// import Availability from "@/components/Tutor/Availability";
 import LessonPlans from "@/components/Tutor/LessonPlans";
 import AnalyticsChart from "@/components/Tutor/AnalyticsChart";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
@@ -58,7 +58,7 @@ const TutorDashboard: React.FC = () => {
             <UpcomingSessions />
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
               <WeeklyCalendar />
-              <Availability/>
+              <TutorDashboardAvailability />
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <LessonPlans />

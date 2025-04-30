@@ -10,14 +10,30 @@ export const apiClient = async (
   token?: string
 ) => {
   
-  const res = await fetch(`${config.apiBaseUrl}/${endpoint}`, {
+  const headers: HeadersInit = {
+    "Content-Type": "application/json",
+    ...(token && { Authorization: `Bearer ${token}` }),
+  };
+
+  const options: RequestInit = {
     method,
-    headers: {
-      "Content-Type": "application/json",
-      ...(token && { Authorization: `Bearer ${token}` }),
-    },
-    body: body ? JSON.stringify(body) : undefined,
-  });
+    headers,
+  };
+  
+  if (body && method !== "GET" && method !== "HEAD") {
+    options.body = JSON.stringify(body);
+  }
+
+  const res = await fetch(`${config.apiBaseUrl}/${endpoint}`, options);
+
+  // const res = await fetch(`${config.apiBaseUrl}/${endpoint}`, {
+  //   method,
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //     ...(token && { Authorization: `Bearer ${token}` }),
+  //   },
+  //   body: body ? JSON.stringify(body) : undefined,
+  // });
 
   if (!res.ok) {
     const errorData = await res.json();

@@ -4,6 +4,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { FormFields } from "./FormFields";
 import { login, register} from "../../api/auth/auth";
 import { validateRegisterForm } from "@/utils/validation";
+import swal from 'sweetalert2';
+import Swal from "sweetalert2";
 // import { useAuth } from "@/hooks/useAuth";  *****  running code ***
 
 const RegistrationForm = () => {
@@ -43,7 +45,7 @@ const RegistrationForm = () => {
         localStorage.setItem("auth_token", data.token);
         //alert(JSON.stringify(data));
         localStorage.setItem("auth_user", JSON.stringify(data.user));
-        alert(data.role);
+        //alert(data.role);
         // ✅ Set cookie for role-based middleware (expires in 1 day)
         document.cookie = `role=${data.role[0]}; path=/; max-age=86400;`;
         document.cookie = `token=${data.token}; path=/; max-age=86400;`;
@@ -77,13 +79,15 @@ const RegistrationForm = () => {
         //const data = await register(formData.email, formData.password);
         const data = await register(payload);
         localStorage.setItem("auth_token", data.token);
-        alert("Registration successful!");
+        //alert("Registration successful!");
+       Swal.fire("Good job!", "Registration successful!", "success");
 
         // ✅ Set role cookie after registration
         //document.cookie = `role=${data.user.role}; path=/; max-age=86400;`;
       }
     } catch (error: any) {
-      alert("Error: " + error.message);
+      Swal.fire("Error:", error.message , "error");
+      //alert("Error: " + error.message);
     }
   };
 

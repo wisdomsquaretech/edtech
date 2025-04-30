@@ -1,12 +1,24 @@
 // The exported code uses Tailwind CSS. Install Tailwind CSS in your dev environment to ensure all styles work.
 import React, { useState, useEffect } from 'react';
 import * as echarts from 'echarts';
+import config from "@/config";
+
+
 const TutorDashboardCalendar: React.FC = () => {
     const [view, setView] = useState<'week' | 'month'>('week');
     const [currentDate, setCurrentDate] = useState(new Date());
     const [showModal, setShowModal] = useState(false);
     const [selectedSession, setSelectedSession] = useState<any>(null);
     const [modalMode, setModalMode] = useState<'add' | 'edit' | 'cancel'>('add');
+    const [callTitle, setCallTitle] = useState<any>(null);
+    
+    
+    const generateMeetingLink = (tutorId: string, sessionId: string) => {
+        const roomName = `${tutorId}_${sessionId}`;
+        return `${config.jistiLink}/${roomName}`;
+      };
+
+    const meetingLink = generateMeetingLink("242", "C456");
     // Mock data for sessions
     const [sessions, setSessions] = useState([
         {
@@ -14,9 +26,10 @@ const TutorDashboardCalendar: React.FC = () => {
             title: "English Conversation",
             studentName: "Alex Johnson",
             level: "Intermediate",
-            startTime: new Date(2025, 3, 23, 10, 0),
-            endTime: new Date(2025, 3, 23, 11, 0),
+            startTime: new Date(2025, 4, 23, 10, 0),
+            endTime: new Date(2025, 4, 23, 11, 0),
             platform: "Zoom",
+            
             meetingLink: "https://zoom.us/j/123456789",
             status: "upcoming"
         },
@@ -25,8 +38,8 @@ const TutorDashboardCalendar: React.FC = () => {
             title: "Spanish Grammar",
             studentName: "Maria Garcia",
             level: "Advanced",
-            startTime: new Date(2025, 3, 23, 14, 0),
-            endTime: new Date(2025, 3, 23, 15, 0),
+            startTime: new Date(2025, 4, 23, 14, 0),
+            endTime: new Date(2025, 4, 23, 15, 0),
             platform: "Jitsi",
             meetingLink: "https://meet.jit.si/SpanishClass123",
             status: "upcoming"
@@ -36,8 +49,8 @@ const TutorDashboardCalendar: React.FC = () => {
             title: "French Basics",
             studentName: "Thomas Wilson",
             level: "Beginner",
-            startTime: new Date(2025, 3, 24, 9, 0),
-            endTime: new Date(2025, 3, 24, 10, 0),
+            startTime: new Date(2025, 3, 30, 9, 0),
+            endTime: new Date(2025, 3, 30, 10, 0),
             platform: "Zoom",
             meetingLink: "https://zoom.us/j/987654321",
             status: "upcoming"
@@ -47,8 +60,8 @@ const TutorDashboardCalendar: React.FC = () => {
             title: "German Conversation",
             studentName: "Emma Schmidt",
             level: "Intermediate",
-            startTime: new Date(2025, 3, 25, 16, 0),
-            endTime: new Date(2025, 3, 25, 17, 0),
+            startTime: new Date(2025, 3, 30, 16, 0),
+            endTime: new Date(2025, 3, 30, 17, 0),
             platform: "Jitsi",
             meetingLink: "https://meet.jit.si/GermanClass456",
             status: "upcoming"
@@ -58,24 +71,14 @@ const TutorDashboardCalendar: React.FC = () => {
             title: "Japanese Kanji",
             studentName: "Ryan Tanaka",
             level: "Advanced",
-            startTime: new Date(2025, 3, 26, 11, 0),
-            endTime: new Date(2025, 3, 26, 12, 30),
+            startTime: new Date(2025, 4, 2, 11, 0),
+            endTime: new Date(2025, 4, 2, 12, 30),
             platform: "Zoom",
             meetingLink: "https://zoom.us/j/567891234",
             status: "upcoming"
         }
     ]);
-    // Time zone handling
-    const [timezone, setTimezone] = useState("UTC");
-    const timezones = [
-        "UTC",
-        "America/New_York",
-        "America/Los_Angeles",
-        "Europe/London",
-        "Europe/Paris",
-        "Asia/Tokyo",
-        "Australia/Sydney"
-    ];
+   
     // Generate dates for the current week or month
     const getDates = () => {
         const dates = [];
@@ -377,7 +380,7 @@ const TutorDashboardCalendar: React.FC = () => {
                                         </div>
                                         <div className="flex items-center">
                                             <div className="mr-4">
-                                                <select
+                                                {/* <select
                                                     value={timezone}
                                                     onChange={(e) => setTimezone(e.target.value)}
                                                     className="block w-full pl-3 pr-10 py-2 text-sm border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
@@ -385,7 +388,8 @@ const TutorDashboardCalendar: React.FC = () => {
                                                     {timezones.map((tz) => (
                                                         <option key={tz} value={tz}>{tz}</option>
                                                     ))}
-                                                </select>
+                                                </select> */}
+                                                
                                             </div>
                                             <div className="flex space-x-2">
                                                 <button
@@ -588,14 +592,11 @@ const TutorDashboardCalendar: React.FC = () => {
                                                             </div>
                                                         </div>
                                                         <div className="mt-3 flex space-x-2">
-                                                            <a
-                                                                href={session.meetingLink}
-                                                                target="_blank"
-                                                                rel="noopener noreferrer"
-                                                                className="flex-1 bg-indigo-600 text-white px-3 py-1.5 text-sm font-medium rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 !rounded-button whitespace-nowrap cursor-pointer"
-                                                            >
-                                                                Join Session
+                                                            
+                                                            <a href={meetingLink} className="flex-1 bg-indigo-600 text-white px-3 py-1.5 text-sm font-medium rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 !rounded-button whitespace-nowrap cursor-pointer" target="_blank" rel="noopener noreferrer">
+                                                                 Join Session
                                                             </a>
+ 
                                                             <button
                                                                 onClick={() => handleReschedule(session)}
                                                                 className="flex-1 bg-white text-gray-700 px-3 py-1.5 text-sm font-medium rounded-md border border-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 !rounded-button whitespace-nowrap cursor-pointer"

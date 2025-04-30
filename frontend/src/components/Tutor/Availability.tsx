@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { tutorAvailabilityAPI } from "@/api";
+import { tutorFunctionalityAPI } from "@/api";
 import { getAuthToken, getAuthUser } from "@/hooks/useCurrentUser";
 import TimezoneSelect from "@/utils/timezoneSelect";
 
@@ -9,13 +9,13 @@ const Availability = () => {
   const token = getAuthToken();
   const user = getAuthUser();
 
+  
   const [availability, setAvailability] = useState<Record<string, boolean>>({
-    monday: false, tuesday: false, wednesday: false,
+    monday: false, tuesday: false, wednesday: false,      
     thursday: false, friday: false, saturday: false, sunday: false,
   });
-  const [startTime, setStartTime] = useState("09:00");
-  const [endTime, setEndTime] = useState("17:00");
-  //const [timezone, setTimezone] = useState("America/New_York");
+  const [startTime, setStartTime] = useState("07:00");
+  const [endTime, setEndTime] = useState("10:00");
   const [timezone, setTimezone] = useState('');
   const toggleDay = (day: string) => {
     setAvailability((prev) => ({ ...prev, [day]: !prev[day] }));
@@ -23,11 +23,10 @@ const Availability = () => {
 
   
   const handleSave = async () => {
-
+    alert('hi');
     const selectedDays = Object.entries(availability)
       .filter(([_, isAvailable]) => isAvailable)
       .map(([day]) => day);
-
     const tutorId = user?.id; 
   
     if (!tutorId || !token) {
@@ -35,13 +34,19 @@ const Availability = () => {
       return;
     }
 
+    if (selectedDays.length === 0) {
+      alert("Please select at least one day.");
+      return;
+    }
+
     try {
       for (const day of selectedDays) {
-        await tutorAvailabilityAPI.saveTutorAvailability(tutorId, day, startTime, endTime, token);
+        await tutorFunctionalityAPI.saveTutorAvailability(tutorId, selectedDays.join(","), startTime, endTime, token);
       }
       alert("Availability saved successfully!");
     } catch (err: any) {
       console.error("Save failed:", err.message);
+      alert("Failed to save availability.");
     }
   };
 
@@ -104,7 +109,7 @@ const Availability = () => {
         ))}
       </div>
 
-      <div className="grid grid-cols-2 gap-4 mb-4">
+      {/* <div className="grid grid-cols-2 gap-4 mb-4">
         <div>
           <label className="block text-sm font-medium mb-2">Start Time</label>
           <input
@@ -123,14 +128,14 @@ const Availability = () => {
             className="w-full border px-3 py-2 rounded-md"
           />
         </div>
-      </div>
+      </div> */}
 
       <label className="block text-sm font-medium mb-2">Time Zone</label>
      
-      <div>
+      {/* <div>
       <TimezoneSelect timezone={timezone} setTimezone={setTimezone} />
       <p className="mt-2 text-sm text-gray-700">Selected Timezone: {timezone || 'None'}</p>
-    </div>
+    </div> */}
         <button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-md" onClick={handleSave}>
         Save Availability
       </button>

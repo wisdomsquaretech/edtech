@@ -1,5 +1,6 @@
 "use client";
 import React, {useState} from 'react';
+import * as echarts from 'echarts';
 
 const Students: React.FC = () => {
         const [activeTab, setActiveTab] = useState('students');
