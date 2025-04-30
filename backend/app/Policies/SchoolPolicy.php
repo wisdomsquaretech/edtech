@@ -105,4 +105,9 @@ class SchoolPolicy
     {
         return $user->can('reorder_school');
     }
+
+    public function owner(User $user): bool
+    {
+        return $user->can('owner_school');
+    }
 }
