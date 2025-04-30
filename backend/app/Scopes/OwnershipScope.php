@@ -13,6 +13,11 @@ class OwnershipScope implements Scope
 {
     public function apply(Builder $builder, Model $model)
     {
+        // **Only apply on API requests** (e.g. paths starting with 'api/')
+        if (! request()->is('api/*')) {
+            return;
+        }
+
         // Get the authenticated user
         $user = Auth::user();
         if (!$user) return;
