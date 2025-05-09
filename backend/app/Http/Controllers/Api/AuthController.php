@@ -22,7 +22,8 @@ class AuthController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'unique:users,email'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'role' => ['required', 'string', Rule::exists('roles', 'name')],
+            'role' => ['required', 'string', Rule::exists('roles', 'name')],            
+            'schools' => 'required|exists:schools,id'            
         ]);
 
         if ($validator->fails()) {
@@ -45,9 +46,11 @@ class AuthController extends Controller
         // Assign the role after user creation
         $user->assignRole($roleName);  // This will assign the role properly
 
+        $user->schools()->attach($request->schools);
+    
         // Clear the permissions cache
         Cache::forget('spatie.permission.cache');
-
+        
         return response()->json([
             'user' => $user,
         ]);
