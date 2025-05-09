@@ -105,4 +105,9 @@ class SessionFeedbackPolicy
     {
         return $user->can('reorder_session::feedback');
     }
+
+    public function owner(User $user): bool
+    {
+        return $user->can('owner_session::feedback');
+    }
 }

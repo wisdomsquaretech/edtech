@@ -105,4 +105,9 @@ class TutorHoursLookupPolicy
     {
         return $user->can('reorder_tutor::hours::lookup');
     }
+
+    public function owner(User $user): bool
+    {
+        return $user->can('owner_tutor::hours::lookup');
+    }
 }

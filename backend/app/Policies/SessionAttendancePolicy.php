@@ -105,4 +105,9 @@ class SessionAttendancePolicy
     {
         return $user->can('reorder_session::attendance');
     }
+
+    public function owner(User $user): bool
+    {
+        return $user->can('owner_session::attendance');
+    }
 }

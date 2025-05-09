@@ -105,4 +105,9 @@ class APIResourcePolicy
     {
         return $user->can('reorder_api');
     }
+
+    public function owner(User $user): bool
+    {
+        return $user->can('owner_api');
+    }
 }

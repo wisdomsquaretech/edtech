@@ -105,4 +105,9 @@ class TutorStudentSessionLookupPolicy
     {
         return $user->can('reorder_tutor::student::session::lookup');
     }
+
+    public function owner(User $user): bool
+    {
+        return $user->can('owner_tutor::student::session::lookup');
+    }
 }

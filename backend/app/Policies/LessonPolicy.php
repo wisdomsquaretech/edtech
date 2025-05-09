@@ -105,4 +105,9 @@ class LessonPolicy
     {
         return $user->can('reorder_lesson');
     }
+
+    public function owner(User $user): bool
+    {
+        return $user->can('owner_lesson');
+    }
 }

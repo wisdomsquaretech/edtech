@@ -105,4 +105,9 @@ class BookingPolicy
     {
         return $user->can('reorder_booking');
     }
+
+    public function owner(User $user): bool
+    {
+        return $user->can('owner_booking');
+    }
 }

@@ -105,4 +105,9 @@ class SessionPolicy
     {
         return $user->can('reorder_session');
     }
+
+    public function owner(User $user): bool
+    {
+        return $user->can('owner_session');
+    }
 }
