@@ -16,6 +16,8 @@ use Filament\Tables\Table;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
+use Filament\Tables\Actions\Action;
+use App\Helpers\PermissionHelper;
 
 class RoleResource extends Resource implements HasShieldPermissions
 {
@@ -115,6 +117,13 @@ class RoleResource extends Resource implements HasShieldPermissions
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
+                Action::make('resetPermissions')
+                ->label('Reset Permissions')
+                ->requiresConfirmation()
+                ->color('warning')
+                ->action(function ($record) {
+                    PermissionHelper::resetRolePermissionsToDefault($record->id);
+                }),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
