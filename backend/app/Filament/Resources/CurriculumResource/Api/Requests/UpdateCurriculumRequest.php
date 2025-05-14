@@ -24,7 +24,7 @@ class UpdateCurriculumRequest extends FormRequest
         return [
 			'title' => 'required|string',
 			'description' => 'required|string',
-			'creator_id' => 'required',
+			'creator_id' => 'required|exists:users,id',
 			'language_code' => 'required|string'
 		];
     }

@@ -22,11 +22,11 @@ class UpdateLessonRequest extends FormRequest
     public function rules(): array
     {
         return [
-			'curriculum_id' => 'required',
+			'curriculum_id' => 'required|exists:curricula,id',
 			'title' => 'required|string',
-			'level' => 'required|string',
+			'level' => 'required|string|in:scheduled,postponed,completed,cancelled',
 			'description' => 'required|string',
-			'file_type' => 'required|string',
+			'file_type' => 'required|string|in:pdf,video,ppt',
 			'file_path' => 'required|string',
 			'language_code' => 'required|string'
 		];
