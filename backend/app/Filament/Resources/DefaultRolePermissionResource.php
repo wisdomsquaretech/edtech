@@ -171,14 +171,15 @@ class DefaultRolePermissionResource extends Resource
 
     
     public static function checkPermission($permission, $roleId): bool
-    {                
-        $permissionId = Permission::select('id')->where('name','=', $permission)->first();
-        $defaultRoleDate =  DefaultRolePermission::where('permission_id','=',$permissionId['id'])
-                                    ->where('role_id','=', $roleId)->first();
-
-        if($defaultRoleDate instanceof DefaultRolePermission) {
-            return true;
-        } 
+    {                   
+        $permissionId = Permission::select('id')->where('name','=', $permission)->first();        
+        if($permissionId) {
+            $defaultRole =  DefaultRolePermission::where('permission_id','=',$permissionId['id'])
+                                    ->where('role_id','=', $roleId)->first();        
+            if($defaultRole) {
+                return true;
+            }
+        }             
         return false;
     }
 
