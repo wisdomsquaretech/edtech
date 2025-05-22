@@ -24,10 +24,14 @@ class SessionFactory extends Factory
     public function definition(): array
     {
         return [
-            'school_id' => School::factory(),
-            'tutor_id' => User::factory(),
-            'student_id' => User::factory(),
-            'lesson_id' => Lesson::factory(),
+            'school_id' => School::inRandomOrder()->value('id') ?? School::factory(),
+            'tutor_id' => User::role('tutor')->inRandomOrder()->value('id')
+                      ?? User::factory()->afterCreating(fn ($u) => $u->assignRole('tutor')),
+
+            'student_id' => User::role('student')->inRandomOrder()->value('id')
+                      ?? User::factory()->afterCreating(fn ($u) => $u->assignRole('student')),
+
+            'lesson_id' => Lesson::inRandomOrder()->value('id') ?? Lesson::factory(),
             'start_time' => fake()->dateTime(),
             'end_time' => fake()->dateTime(),
             'meeting_link' => fake()->url(),

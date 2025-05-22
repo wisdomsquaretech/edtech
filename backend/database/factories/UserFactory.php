@@ -35,10 +35,12 @@ class UserFactory extends Factory
     public function configure(): static
     {
         return $this->afterCreating(function (User $user) {
-            $roles = ['tutor', 'student', 'coordinator'];
-            $role = fake()->randomElement($roles);
-            Role::firstOrCreate(['name' => $role]);
-            $user->assignRole($role);
+            if ($user->roles()->count() === 0) {
+                $roles = ['tutor', 'student', 'coordinator'];
+                $role = fake()->randomElement($roles);
+                Role::firstOrCreate(['name' => $role]);
+                $user->assignRole($role);
+            }            
         });
     }
 }

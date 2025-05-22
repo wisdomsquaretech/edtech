@@ -25,7 +25,7 @@ class NotificationFactory extends Factory
             'title' => fake()->sentence(4),
             'message' => fake()->text(),
             'status' => fake()->randomElement(["pending","viewed"]),
-            'creator_id' => User::factory(),
+            'creator_id' => User::inRandomOrder()->value('id') ?? User::factory(),
         ];
     }
 }

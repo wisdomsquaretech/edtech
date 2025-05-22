@@ -22,7 +22,8 @@ class TutorAvailabilitySlotFactory extends Factory
     public function definition(): array
     {
         return [
-            'tutor_id' => User::factory(),
+            'tutor_id' => User::role('tutor')->inRandomOrder()->value('id')
+                      ?? User::factory()->afterCreating(fn ($u) => $u->assignRole('tutor')),
             'slot_date' => fake()->date(),
             'start_time' => fake()->time(),
             'end_time' => fake()->time(),

@@ -23,8 +23,9 @@ class TutorHoursLookupFactory extends Factory
     public function definition(): array
     {
         return [
-            'session_id' => Session::factory(),
-            'tutor_id' => User::factory(),
+            'session_id' => Session::inRandomOrder()->value('id') ?? Session::factory(),
+            'tutor_id' => User::role('tutor')->inRandomOrder()->value('id')
+                      ?? User::factory()->afterCreating(fn ($u) => $u->assignRole('tutor')),
             'duration' => fake()->numberBetween(1, 100),
         ];
     }

@@ -24,7 +24,7 @@ class CurriculumFactory extends Factory
         return [
             'title' => fake()->sentence(4),
             'description' => fake()->text(),
-            'creator_id' => User::factory(),
+            'creator_id' => User::inRandomOrder()->value('id') ?? User::factory(),            
             'language_code' => fake()->word(),
         ];
     }

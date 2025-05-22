@@ -22,7 +22,7 @@ class LessonFactory extends Factory
     public function definition(): array
     {
         return [
-            'curriculum_id' => Curriculum::factory(),
+            'curriculum_id' => Curriculum::inRandomOrder()->value('id') ?? Curriculum::factory(),
             'title' => fake()->sentence(4),
             'level' => fake()->randomElement(["beginner","intermediate","advanced"]),
             'description' => fake()->text(),

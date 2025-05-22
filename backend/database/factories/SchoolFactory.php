@@ -25,7 +25,8 @@ class SchoolFactory extends Factory
             'name' => fake()->name(),
             'email' => fake()->safeEmail(),
             'address' => fake()->text(),
-            'coordinator_id' => User::factory(),
+            'coordinator_id' => User::role('coordinator')->inRandomOrder()->value('id')
+                      ?? User::factory()->afterCreating(fn ($u) => $u->assignRole('coordinator')),            
         ];
     }
 }

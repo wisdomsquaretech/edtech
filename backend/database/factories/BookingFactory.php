@@ -24,11 +24,13 @@ class BookingFactory extends Factory
     public function definition(): array
     {
         return [
-            'student_id' => User::factory(),
-            'slot_id' => TutorAvailabilitySlot::factory(),
-            'session_id' => Session::factory(),
-            'status' => fake()->randomElement(["booked","cancelled","completed"]),
-            'creator_id' => User::factory(),
-        ];
+            'student_id' => User::role('student')->inRandomOrder()->value('id')
+                      ?? User::factory()->afterCreating(fn ($u) => $u->assignRole('student')),
+                      
+            'slot_id' => TutorAvailabilitySlot::inRandomOrder()->value('id') ?? TutorAvailabilitySlot::factory(),        
+            'session_id' =>  Session::inRandomOrder()->value('id') ?? Session::factory(),        
+            'status' => fake()->randomElement(["booked","cancelled","completed"]),            
+            'creator_id' => User::inRandomOrder()->value('id') ?? User::factory(),
+        ];        
     }
 }

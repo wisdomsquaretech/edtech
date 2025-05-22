@@ -22,7 +22,7 @@ class LanguageFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::factory(),
+            'user_id' => User::inRandomOrder()->value('id') ?? User::factory(),
             'code' => fake()->unique()->lexify('lang???'),
             'name' => fake()->name(),
             'is_active' => fake()->boolean(),

@@ -23,8 +23,8 @@ class TutorStudentSessionLookupFactory extends Factory
     public function definition(): array
     {
         return [
-            'session_id' => Session::factory(),
-            'user_id' => User::factory(),
+            'session_id' => Session::inRandomOrder()->value('id') ?? Session::factory(),
+            'user_id' => User::inRandomOrder()->value('id') ?? User::factory(),
             'completed' => fake()->numberBetween(1, 10000),
             'incomplete' => fake()->numberBetween(1, 10000),
             'absent' => fake()->numberBetween(1, 10000),
