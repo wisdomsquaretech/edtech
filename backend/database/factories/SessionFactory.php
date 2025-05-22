@@ -30,7 +30,7 @@ class SessionFactory extends Factory
             'lesson_id' => Lesson::factory(),
             'start_time' => fake()->dateTime(),
             'end_time' => fake()->dateTime(),
-            'meeting_link' => fake()->word(),
+            'meeting_link' => fake()->url(),
             'notes' => fake()->text(),
             'platform' => fake()->randomElement(["zoom","jitsi"]),
             'checklist_done' => fake()->boolean(),
