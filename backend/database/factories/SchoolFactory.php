@@ -22,7 +22,7 @@ class SchoolFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->name(),
+            'name' => preg_replace('/[^a-zA-Z\s]/', '', fake()->company() . ' School'),
             'email' => fake()->safeEmail(),
             'address' => fake()->text(),
             'coordinator_id' => User::role('coordinator')->inRandomOrder()->value('id')
