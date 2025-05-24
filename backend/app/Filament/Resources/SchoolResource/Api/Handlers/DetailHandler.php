@@ -29,6 +29,7 @@ class DetailHandler extends Handlers
 
         $query = QueryBuilder::for(
             $query->where(static::getKeyName(), $id)
+                ->with(['users'])
         )
             ->first();
 

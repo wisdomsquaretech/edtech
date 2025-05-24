@@ -23,7 +23,7 @@ class AuthController extends Controller
             'email' => ['required', 'email', 'unique:users,email'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'role' => ['required', 'string', Rule::exists('roles', 'name')],            
-            'schools' => 'required|exists:schools,id'            
+            'schools' => 'sometimes|exists:schools,id'            
         ]);
 
         if ($validator->fails()) {

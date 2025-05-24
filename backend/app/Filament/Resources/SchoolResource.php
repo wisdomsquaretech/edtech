@@ -39,7 +39,13 @@ class SchoolResource extends Resource
                     ->columnSpanFull(),
                 Forms\Components\Select::make('coordinator_id')
                     ->relationship('coordinator', 'name')
+                    ->searchable()
                     ->required(),
+                Forms\Components\Select::make('users')
+                    ->relationship('users', 'name')
+                    ->multiple()
+                    ->preload()
+                    ->label('Associated Users'),
             ]);
     }
 
