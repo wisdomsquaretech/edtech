@@ -35,6 +35,10 @@ class UserFactory extends Factory
     public function configure(): static
     {
         return $this->afterCreating(function (User $user) {
+
+            if (app()->runningUnitTests()) {
+                return;                    //skip in tests
+            }
             if ($user->roles()->count() === 0) {
                 $roles = ['tutor', 'student', 'coordinator'];
                 $role = fake()->randomElement($roles);
