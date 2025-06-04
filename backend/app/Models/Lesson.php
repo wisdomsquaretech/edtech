@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use App\Scopes\OwnershipScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Awcodes\Curator\Models\Media;
 
 class Lesson extends Model
 {
@@ -21,9 +24,7 @@ class Lesson extends Model
         'curriculum_id',
         'title',
         'level',
-        'description',
-        'file_type',
-        'file_path',
+        'description',        
         'language_code',
     ];
 
@@ -53,5 +54,15 @@ class Lesson extends Model
         $this->sessions->each->delete();
 
         parent::delete();
+    }
+    protected static function booted()
+    {
+        static::addGlobalScope(new OwnershipScope);        
+    }
+    public function lessonFiles(): BelongsToMany
+    {
+        return $this->belongsToMany(Media::class, 'lesson_media')
+            ->withPivot('order')
+            ->orderBy('order');
     }
 }

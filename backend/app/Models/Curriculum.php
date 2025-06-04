@@ -60,11 +60,6 @@ class Curriculum extends Model
         parent::delete();
     }
 
-    public function getOwnerKeyName(): string
-    {
-        return 'creator_id';
-    }
-
     protected static function booted()
     {
         static::addGlobalScope(new OwnershipScope);

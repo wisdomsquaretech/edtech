@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Filament\Models\Contracts\FilamentUser;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -10,8 +11,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
-
-class User extends Authenticatable
+use Filament\Panel;
+class User extends Authenticatable implements FilamentUser
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles, SoftDeletes;
 
@@ -72,12 +73,12 @@ class User extends Authenticatable
 
     public function tutorAvailabilities(): HasMany
     {
-        return $this->hasMany(TutorAvailability::class);
+        return $this->hasMany(TutorAvailability::class,'tutor_id');
     }
 
     public function tutorAvailabilitySlots(): HasMany
     {
-        return $this->hasMany(TutorAvailabilitySlot::class);
+        return $this->hasMany(TutorAvailabilitySlot::class,'tutor_id');
     }
 
     public function sessionFeedbacks(): HasMany
@@ -92,7 +93,7 @@ class User extends Authenticatable
 
     public function notifications(): HasMany
     {
-        return $this->hasMany(Notification::class);
+        return $this->hasMany(Notification::class,'creator_id');
     }
 
     public function sessionAttendances(): HasMany
@@ -107,11 +108,16 @@ class User extends Authenticatable
 
     public function tutorHoursLookups(): HasMany
     {
-        return $this->hasMany(TutorHoursLookup::class);
+        return $this->hasMany(TutorHoursLookup::class,'tutor_id');
     }
 
     public function tutorStudentSessionLookups(): HasMany
     {
-        return $this->hasMany(TutorStudentSessionLookup::class);
+        return $this->hasMany(TutorStudentSessionLookup::class,'user_id');
     }
-}
+
+    public function canAccessPanel(Panel $panel): bool
+    {                
+        return $this->hasAnyRole(['admin', 'super_admin']);
+    }
+ }

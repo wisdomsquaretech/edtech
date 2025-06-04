@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Scopes\OwnershipScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -44,5 +45,9 @@ class SessionAttendance extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+    protected static function booted()
+    {
+        static::addGlobalScope(new OwnershipScope);
     }
 }

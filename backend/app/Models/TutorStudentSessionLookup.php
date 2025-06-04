@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Scopes\OwnershipScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -49,5 +50,9 @@ class TutorStudentSessionLookup extends Model
     public function bookings(): HasMany
     {
         return $this->hasMany(Booking::class);
+    }
+    protected static function booted()
+    {
+        static::addGlobalScope(new OwnershipScope);
     }
 }

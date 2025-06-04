@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Scopes\OwnershipScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -113,5 +114,9 @@ class Session extends Model
         $this->sessionFeedbacks->each->delete();
 
         parent::delete();
+    }
+    protected static function booted()
+    {                    
+        static::addGlobalScope(new OwnershipScope);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Scopes\OwnershipScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -55,5 +56,9 @@ class Booking extends Model
     public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+    protected static function booted()
+    {
+        static::addGlobalScope(new OwnershipScope);       
     }
 }

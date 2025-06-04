@@ -38,12 +38,6 @@ class Notification extends Model
     {
         return $this->belongsTo(User::class);
     }
-
-    public function getOwnerKeyName(): string
-    {
-        return 'creator_id';
-    }
-
     protected static function booted()
     {
         static::addGlobalScope(new OwnershipScope);

@@ -38,11 +38,6 @@ class TutorAvailability extends Model
     {
         return $this->belongsTo(User::class);
     }
-    
-    public function getOwnerKeyName(): string
-    {
-        return 'tutor_id';
-    }
 
     protected static function booted()
     {

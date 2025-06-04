@@ -7,6 +7,7 @@ use DateTimeInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class TutorAvailabilitySlot extends Model
@@ -46,13 +47,24 @@ class TutorAvailabilitySlot extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function getOwnerKeyName(): string
-    {
-        return 'tutor_id';
-    }
-
     protected static function booted()
     {
         static::addGlobalScope(new OwnershipScope);
+    }
+
+    public function bookings(): HasMany
+    {
+        return $this->hasMany(Booking::class, 'slot_id');
+    }
+
+    public function remainingCapacity(): int
+    {
+        $bookingsCount = $this->relationLoaded('bookings')
+        ? $this->bookings->count()
+        : $this->bookings()->count();
+
+        $remaining = $this->capacity - $bookingsCount;
+
+        return $remaining > 0 ? $remaining : 0;
     }
 }
