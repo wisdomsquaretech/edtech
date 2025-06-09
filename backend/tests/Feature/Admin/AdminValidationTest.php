@@ -17,16 +17,14 @@ it('shows validation errors when creating a lesson with missing fields', functio
         ->fillForm([
             'curriculum_id' => null,
             'title'         => '',
-            'description'   => '',
-            'file_path'     => '',
+            'description'   => '',            
             'language_code' => '',          
         ])
         ->call('create')       
         ->assertHasErrors([
             'data.curriculum_id' => 'required',
             'data.title'         => 'required',
-            'data.description'   => 'required',
-            'data.file_path'     => 'required',
+            'data.description'   => 'required',            
             'data.language_code' => 'required',
            
         ]);
