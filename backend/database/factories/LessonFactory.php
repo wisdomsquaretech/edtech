@@ -25,9 +25,7 @@ class LessonFactory extends Factory
             'curriculum_id' => Curriculum::inRandomOrder()->value('id') ?? Curriculum::factory(),
             'title' => fake()->sentence(4),
             'level' => fake()->randomElement(["beginner","intermediate","advanced"]),
-            'description' => fake()->text(),
-            'file_type' => fake()->randomElement(["pdf","video","ppt"]),
-            'file_path' => fake()->word(),
+            'description' => fake()->text(),            
             'language_code' => fake()->word(),
         ];
     }

@@ -3,13 +3,13 @@
 namespace App\Models;
 
 use App\Scopes\OwnershipScope;
+use Awcodes\Curator\Models\Media;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Awcodes\Curator\Models\Media;
 
 class Lesson extends Model
 {
@@ -63,6 +63,6 @@ class Lesson extends Model
     {
         return $this->belongsToMany(Media::class, 'lesson_media')
             ->withPivot('order')
-            ->orderBy('order');
+            ->orderBy('lesson_media.order');
     }
 }
