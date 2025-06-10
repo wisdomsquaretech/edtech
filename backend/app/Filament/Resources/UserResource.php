@@ -56,7 +56,7 @@ class UserResource extends Resource implements HasShieldPermissions
                     ->maxLength(255),
                 Forms\Components\TextInput::make('email')
                     ->email()
-                    ->unique()
+                    //->unique()
                     ->required()
                     ->maxLength(255),
                 //Forms\Components\DateTimePicker::make('email_verified_at'),
@@ -142,7 +142,7 @@ class UserResource extends Resource implements HasShieldPermissions
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-              //  Tables\Filters\TrashedFilter::make(),
+                //  Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
@@ -150,8 +150,31 @@ class UserResource extends Resource implements HasShieldPermissions
                 Tables\Actions\RestoreAction::make(),
                 Tables\Actions\DeleteAction::make()
                     ->label('Delete')
+                    ->visible(function (User $record) {
+                        $authUser = auth()->user();
+                         
+                        if (!$authUser) {
+                            return false;
+                        }
+
+                        $targetIsSuperAdmin = $record->hasRole('super_admin');
+                        $authIsSuperAdmin = $authUser->hasRole('super_admin');
+
+                        // Super Admin can delete anyone
+                        if ($authIsSuperAdmin) {
+                            return true;
+                        }
+
+                        // Admin can delete everyone except Super Admin
+                        if ($authUser->hasRole('admin') && !$targetIsSuperAdmin) {
+                            return true;
+                        }
+
+                        // Everyone else can’t see delete
+                        return false;
+                    })
                     ->modalHeading('Delete User')
-                    ->modalDescription('What should be done with this user’s data?')
+                    ->modalDescription(fn(User $record) => "What should be done with {$record->name}'s data?")
                     ->form([
                         Radio::make('action')
                             ->label('Content Handling')
@@ -163,10 +186,45 @@ class UserResource extends Resource implements HasShieldPermissions
                             ->required(),
 
                         Select::make('reassign_to')
-                            ->label('Select user to reassign to')
-                            ->options(fn(User $record) 
-                                => User::where('id', '!=', $record->id)
-                                ->pluck('name', 'id'))
+                            ->label('Select user to reassign to')                          
+                            ->options(function (User $record) {
+                                // Map “role being deleted”  ➜  “roles allowed to receive the data”
+                                $matrix = [
+                                    'student' => ['tutor'],
+                                    'tutor' => ['super_admin', 'admin', 'coordinator', 'tutor'],
+                                    'coordinator' => ['super_admin', 'admin', 'tutor'],
+                                    'admin' => ['super_admin', 'admin'],
+                                ];
+
+                                // Pick one main role.  (If you allow multi–role users, adapt this.)
+                                $primaryRole = $record->roles()->first()?->name;
+                                $allowedRoles = $matrix[$primaryRole] ?? [];
+
+                                // Role priority map
+                                $roleOrder = [
+                                    'super_admin' => 1,
+                                    'admin' => 2,
+                                    'coordinator' => 3,
+                                    'tutor' => 4,
+                                ];
+
+                                // Build the dropdown list
+                                return User::query()
+                                    ->with('roles') // Ensure roles are eager-loaded
+                                    ->where('id', '!=', $record->id)          // don’t show the user being deleted
+                                    ->whereHas('roles', function ($q) use ($allowedRoles) {
+                                        $q->whereIn('name', $allowedRoles);
+                                    })
+                                    ->get()
+                                    ->sortBy(function ($user) use ($roleOrder) {
+                                        $role = strtolower($user->roles->first()?->name ?? '');
+                                        return $roleOrder[$role] ?? 99;
+                                    })
+                                    ->mapWithKeys(function ($user) {
+                                        $role = $user->roles->first()->name; //?? 'No Role';
+                                        return [$user->id => "{$user->name} ({$role})"];
+                                    });
+                            })
                             ->visible(fn($get) => $get('action') === 'reassign')
                             ->requiredIf('action', 'reassign')
                             ->searchable(),
@@ -174,30 +232,30 @@ class UserResource extends Resource implements HasShieldPermissions
                     ->action(function (array $data, User $record) {
                         if ($data['action'] === 'reassign') {
                             $newUserId = $data['reassign_to'];
-                           
+
                             // Reassign relationships
                             // Optionally detach many-to-many relationships
-
+            
                             $record->languages()->update(['user_id' => $newUserId]);
 
                             // sessions
-                            $sessionIds = $record->sessions()->pluck('session_id')->toArray();                           
+                            $sessionIds = $record->sessions()->pluck('session_id')->toArray();
                             $record->sessions()->detach();
-                            User::find($newUserId)?->sessions()->syncWithoutDetaching($sessionIds);                            
+                            User::find($newUserId)?->sessions()->syncWithoutDetaching($sessionIds);
                             Session::where('tutor_id', $record->id)->update(['tutor_id' => $newUserId]);
-                            Session::where('student_id', $record->id)->update(['student_id' => $newUserId]);                                                   
-                            
+                            Session::where('student_id', $record->id)->update(['student_id' => $newUserId]);
+
                             // curriculum
-                            $curriculumIds = $record->curricula()->pluck('curriculum_id')->toArray();                           
+                            $curriculumIds = $record->curricula()->pluck('curriculum_id')->toArray();
                             $record->curricula()->detach();
                             User::find($newUserId)?->curricula()->syncWithoutDetaching($curriculumIds);
-                            Curriculum::where('creator_id', $record->id)->update(['creator_id' => $newUserId]);        
-                            
+                            Curriculum::where('creator_id', $record->id)->update(['creator_id' => $newUserId]);
+
                             // school
-                            $schoolIds = $record->schools()->pluck('school_id')->toArray();                           
+                            $schoolIds = $record->schools()->pluck('school_id')->toArray();
                             $record->schools()->detach();
                             User::find($newUserId)?->schools()->syncWithoutDetaching($schoolIds);
-                            School::where('coordinator_id', $record->id)->update(['coordinator_id' => $newUserId]);                                                            
+                            School::where('coordinator_id', $record->id)->update(['coordinator_id' => $newUserId]);
 
                             $record->tutorAvailabilities()->update(['tutor_id' => $newUserId]);
                             $record->tutorAvailabilitySlots()->update(['tutor_id' => $newUserId]);
@@ -216,17 +274,17 @@ class UserResource extends Resource implements HasShieldPermissions
                             // Delete all related data
                             // Also detach pivot relations
                             $record->languages()->delete();
-                                                        
+
                             $record->curricula()->detach();
                             $record->sessions()->detach();
                             $record->schools()->detach();
 
                             Session::where('tutor_id', $record->id)->delete();
                             Session::where('student_id', $record->id)->delete();
-                            
+
                             School::where('coordinator_id', $record->id)->delete();
-                            Curriculum::where('creator_id', $record->id)->delete();                            
-                           
+                            Curriculum::where('creator_id', $record->id)->delete();
+
                             $record->tutorAvailabilities()->delete();
                             $record->tutorAvailabilitySlots()->delete();
 

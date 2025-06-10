@@ -38,8 +38,8 @@ class TutorAvailabilitySlotResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('tutor_id')
-                    ->relationship('tutor', 'name')
+                Forms\Components\Select::make('tutor_id')                    
+                    ->relationship('tutor', 'name', fn($query) => $query->role('tutor'))
                     ->required(),
                 Forms\Components\DatePicker::make('slot_date')
                     ->required(),

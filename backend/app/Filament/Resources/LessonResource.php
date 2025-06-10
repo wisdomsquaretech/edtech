@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\LessonResource\Pages;
 use App\Filament\Resources\LessonResource\RelationManagers;
 use App\Models\Lesson;
+use App\PathGenerators\CustomPathGenerator;
 use Filament\Forms;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
@@ -13,7 +14,8 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-
+use Awcodes\Curator\Components\Forms\CuratorPicker;
+use Awcodes\Curator\PathGenerators\DatePathGenerator;
 class LessonResource extends Resource
 {
     protected static ?string $model = Lesson::class;
@@ -36,25 +38,44 @@ class LessonResource extends Resource
                         'beginner' => 'Beginner',
                         'intermediate' => 'Intermediate',
                         'advanced' => 'Advanced',
-                    ]),
-                Forms\Components\Textarea::make('description')
-                    ->required()
-                    ->columnSpanFull(),
-                Select::make('file_type')
-                    ->label('File type')
-                    ->options([
-                        'pdf' => 'Pdf',
-                        'video' => 'Video',
-                        'ppt' => 'Ppt',
                     ])
                     ->required(),
-                Forms\Components\TextInput::make('file_path')
+                Forms\Components\Textarea::make('description')
                     ->required()
-                    ->maxLength(255),
+                    ->columnSpanFull(),                    
+                CuratorPicker::make('lesson_files')
+                    ->label('Lesson Files (PDF/PPT)')
+                    ->multiple()
+                    ->maxItems(3)
+                    ->relationship('lessonFiles', 'id')
+                    ->acceptedFileTypes([
+                        'application/pdf',
+                        'application/vnd.ms-powerpoint',
+                        'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+                    ])
+                    ->orderColumn('order')
+                    ->typeColumn('type')
+                    ->typeValue('document')
+                    ->required()
+                    ->size('sm')
+                    ->pathGenerator(CustomPathGenerator::class)
+                    ->listDisplay(true),
+     
                 Forms\Components\TextInput::make('language_code')
                     ->required()
                     ->maxLength(255),
-            ]);
+            ]);        
+    }
+
+    protected function getTableQuery(): Builder
+    {
+        return parent::getTableQuery()->with(['lesson_files']);
+    }
+
+    public function register()
+    {
+        CuratorPicker::make('image')
+            ->pathGenerator(DatePathGenerator::class);
     }
 
     public static function table(Table $table): Table
@@ -67,10 +88,7 @@ class LessonResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('title')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('level'),
-                Tables\Columns\TextColumn::make('file_type'),
-                Tables\Columns\TextColumn::make('file_path')
-                    ->searchable(),
+                Tables\Columns\TextColumn::make('level'),                
                 Tables\Columns\TextColumn::make('language_code')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
