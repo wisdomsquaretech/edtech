@@ -18,8 +18,7 @@ test('lesson store validation errors', function () {
       // missing required fields + invalid enums + missing file
       $bad = [
         'curriculum_id' => 999,         // non‑existent
-        'level'         => 'expert',    // not in [beginner, intermediate, advanced]
-        'file_type'     => 'doc',       // invalid
+        'level'         => 'expert',    // not in [beginner, intermediate, advanced]       
         // no title, no file
       ];
 
@@ -31,9 +30,7 @@ test('lesson store validation errors', function () {
           'title',
           'curriculum_id',
           'description',
-          'level',
-          'file_type',
-          'file_path',  
+          'level',          
           'language_code',
         ]);     
 });

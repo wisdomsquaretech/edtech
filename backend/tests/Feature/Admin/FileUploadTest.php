@@ -56,7 +56,7 @@ it('creates a lesson and syncs up to 3 PDF/PPT media via Livewire action', funct
     $curriculum = Curriculum::factory()->create();
 
     // 4) Drive only the Livewire action—no Blade rendering of the picker
-    $test = Livewire::test(CreateLesson::class)
+    Livewire::test(CreateLesson::class)
         ->fillForm([
             'curriculum_id'=> $curriculum->id,
             'title'=> 'Lesson Files',

@@ -72,11 +72,11 @@ class LessonResource extends Resource
         return parent::getTableQuery()->with(['lesson_files']);
     }
 
-    public function register()
-    {
-        CuratorPicker::make('image')
-            ->pathGenerator(DatePathGenerator::class);
-    }
+    // public function register()
+    // {
+    //     CuratorPicker::make('image')
+    //         ->pathGenerator(DatePathGenerator::class);
+    // }
 
     public static function table(Table $table): Table
     {
