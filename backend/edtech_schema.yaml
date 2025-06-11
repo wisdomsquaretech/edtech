@@ -86,7 +86,8 @@ models:
     timestamps
     softDeletes
     relationships:
-      belongsTo: "User:tutor"
+      belongsTo: "User:tutor"      
+      hasMany: Booking
 
   Session:
     school_id: id foreign

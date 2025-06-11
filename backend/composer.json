@@ -2,12 +2,18 @@
     "name": "laravel/laravel",
     "type": "project",
     "description": "The skeleton application for the Laravel framework.",
-    "keywords": ["laravel", "framework"],
+    "keywords": [
+        "laravel",
+        "framework"
+    ],
     "license": "MIT",
     "require": {
         "php": "^8.1",
+        "awcodes/filament-curator": "^3.7",
         "bezhansalleh/filament-shield": "^3.3",
-        "filament/filament": "^3.0",
+        "filament/actions": "^3.3",
+        "filament/filament": "^3.3",
+        "filament/infolists": "^3.3",
         "filament/tables": "^3.3",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^10.10",
@@ -22,7 +28,9 @@
         "laravel/sail": "^1.18",
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^7.0",
-        "phpunit/phpunit": "^10.1",
+        "pestphp/pest": "^2.36",
+        "pestphp/pest-plugin-laravel": "^2.4",
+        "pestphp/pest-plugin-livewire": "^2.1",
         "spatie/laravel-ignition": "^2.0"
     },
     "autoload": {
@@ -30,7 +38,11 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
-        }
+        },
+        "files": [
+            "app/Helpers/vite.php",
+            "app/Helpers/PermissionHelper.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {

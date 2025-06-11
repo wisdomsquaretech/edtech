@@ -11,6 +11,7 @@ use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
+use Filament\Support\Assets\Css;
 use Filament\Support\Colors\Color;
 use Filament\Widgets;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
@@ -22,6 +23,8 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Filament\Navigation\NavigationItem;
 use Filament\Navigation\NavigationGroup;
 use Rupadana\ApiService\ApiServicePlugin;
+use Filament\Support\Facades\FilamentAsset;
+use Filament\Support\Assets\Js;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -65,13 +68,34 @@ class AdminPanelProvider extends PanelProvider
                 FilamentShieldPlugin::make(),
             ])
             ->plugins([
+                \Awcodes\Curator\CuratorPlugin::make()
+                    ->label('Media')
+                    ->pluralLabel('Media')
+                    ->navigationIcon('heroicon-o-photo')
+                    ->navigationGroup('Content')
+                    ->navigationSort(3)
+                    ->navigationCountBadge()
+                    ->registerNavigation(true)
+                    ->defaultListView('list')
+                //->resource(MediaResource::class)    
+            ])
+            ->plugins([
                 ApiServicePlugin::make()
-                ->middleware([
-                    ApiCacheMiddleware::class
-                ])
+                    ->middleware([
+                        ApiCacheMiddleware::class
+                    ]),
             ])
             ->authMiddleware([
                 Authenticate::class,
             ]);
+    }
+
+    public function boot(): void
+    {
+        FilamentAsset::register([
+            Css::make('appcss', viteAsset('resources/css/app.css')),
+            Js::make('appjs', viteAsset('resources/js/app.js')),
+            Css::make('awcodes/curator', './vendor/awcodes/filament-curator/resources/dist/curator.css'),
+        ]/*,package: 'awcodes/filament-curator'*/);
     }
 }
