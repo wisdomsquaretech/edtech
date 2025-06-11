@@ -39,7 +39,8 @@ class BookingPolicy
      */
     public function update(User $user, Booking $booking): bool
     {
-        return $user->can('update_booking');
+        //return $user->can('update_booking');
+        return false;
     }
 
     /**

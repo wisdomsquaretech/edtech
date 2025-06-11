@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\BookingResource\Api\Requests;
 
+use App\Models\TutorAvailabilitySlot;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CreateBookingRequest extends FormRequest
@@ -28,5 +29,16 @@ class CreateBookingRequest extends FormRequest
             'status' => 'required|string|in:booked,cancelled,completed',
             'creator_id' => 'required|exists:users,id'
         ];
+    }
+
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            $slot = TutorAvailabilitySlot::find($this->slot_id);
+            
+            if ($slot && $slot->remainingCapacity() <= 0) {
+                $validator->errors()->add('slot_id', 'This tutor availability slot is already full.');
+            }
+        });
     }
 }

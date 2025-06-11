@@ -40,12 +40,12 @@ class Booking extends Model
 
     public function student(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'student_id');
     }
 
     public function slot(): BelongsTo
     {
-        return $this->belongsTo(TutorAvailabilitySlot::class);
+        return $this->belongsTo(TutorAvailabilitySlot::class, 'slot_id');
     }
 
     public function session(): BelongsTo
@@ -55,10 +55,31 @@ class Booking extends Model
 
     public function creator(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class,'creator_id');
     }
     protected static function booted()
     {
-        static::addGlobalScope(new OwnershipScope);       
+        static::addGlobalScope(new OwnershipScope);                  
+
+        // on create and delete, update is_booked (TutorAvailabilitySlot) to true/false based on booking created/ deleted
+        static::created(function ($booking) {
+            $booking->updateSlotBookingStatus();
+        });
+
+        static::deleted(function ($booking) {
+            $booking->updateSlotBookingStatus();
+        });
+    }
+
+    public function updateSlotBookingStatus(): void
+    {
+        $slot = $this->slot;
+
+        if (!$slot) return;
+
+        $bookingCount = $slot->bookings()->count();
+
+        $slot->is_booked = $bookingCount >= $slot->capacity;
+        $slot->save();
     }
 }
